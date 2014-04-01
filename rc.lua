@@ -244,11 +244,17 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore,"Restore client"),
     awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,"Focus master"),
 
-    
+    awful.key({ modkey, ""}),
 
     -- Prompt
     keydoc.group("Misc"),
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end,"Run program"),
+    -- awful.key({ modkey },            "r",     function ()
+    --   awful.util.spawn("dmenu_run -i -l 4 -p 'Run:' -nb '" .. 
+    --     beautiful.bg_normal .. "' -nf '" .. beautiful.fg_normal .. 
+    --     "' -sb '" .. beautiful.bg_focus .. 
+    --     "' -sf '" .. beautiful.fg_focus .. "'",false) 
+    -- end),
 
     -- awful.key({ modkey }, "y",
     --           function ()
