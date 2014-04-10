@@ -1,7 +1,7 @@
 path = "/home/luke/.config/awesome/themes/myTheme"
 theme = {}
 
-theme.font          = "terminus 8"
+theme.font          = "tamsyn 10"
 
 theme.bg_normal     = "#1E1E1E"
 theme.bg_focus      = "#386799"
