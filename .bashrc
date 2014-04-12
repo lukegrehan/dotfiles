@@ -13,10 +13,6 @@ shopt -s globstar
 
 . /usr/share/git/completion/git-prompt.sh
 . /usr/local/bin/colours.sh
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWUPSTREAM="auto"
 
 PS1='\[$LightGreen\]\u@\h\[$NC\]:\[$LightBlue\]\w\[$Yellow\]$(__git_ps1)\[$NC\]\$ '
 
