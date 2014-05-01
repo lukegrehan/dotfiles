@@ -99,11 +99,19 @@ mytextclock = awful.widget.textclock()
 
 batterywidget = wibox.widget.textbox()    
 batterywidget:set_text(" |***|")    
-batterywidgettimer = timer({ timeout = 5 })    
+batterywidgettimer = timer({ timeout = 5 })
 batterywidgettimer:connect_signal("timeout",    
   function()    
-    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))    
-    batterywidget:set_text(" |" .. fh:read("*l") .. "%|")    
+    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
+    text = fh:read("*l")
+    n = tonumber(text)
+    if(n==100) then text = "charged"
+    else text = text.."%" end
+    if(n<5) then 
+      naughty.notify({ preset = naughty.config.presets.critical,
+                    title = "low battery"}) 
+    end
+    batterywidget:set_text(" |" .. text .. "|")    
     fh:close()    
   end    
 )    
