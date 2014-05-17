@@ -97,6 +97,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
+battery_warned = false
 batterywidget = wibox.widget.textbox()    
 batterywidget:set_text(" |***|")    
 batterywidgettimer = timer({ timeout = 5 })
@@ -107,7 +108,11 @@ batterywidgettimer:connect_signal("timeout",
     n = tonumber(text)
     if(n==100) then text = "charged"
     else text = text.."%" end
-    if(n<5) then 
+
+    if (n>5) then 
+      battery_warned = false 
+    elseif(n<5 and not battery_warned) then 
+      battery_warned = true
       naughty.notify({ preset = naughty.config.presets.critical,
                     title = "low battery"}) 
     end
