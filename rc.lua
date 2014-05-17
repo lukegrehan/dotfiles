@@ -265,9 +265,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore,"Restore client"),
     awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,"Focus master"),
 
-    awful.key({ modkey, ""}),
-
-    -- Prompt
+   -- Prompt
     keydoc.group("Misc"),
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end,"Run program"),
 
@@ -319,12 +317,13 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
-    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
-    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
+    keydoc.group("Client keys"),
+    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end,"Set client fullscreen"),
+    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,"Close window"),
+    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,"Toggle floating"),
+    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,"Swap client with master"),
+    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ,"Move to screen"),
+    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,"Set ontop"),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -335,7 +334,7 @@ clientkeys = awful.util.table.join(
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
-        end)
+        end,"Minimise client")
 )
 
 -- Bind all key numbers to tags.
