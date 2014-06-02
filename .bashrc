@@ -14,6 +14,7 @@ shopt -s globstar
 . /usr/share/git/completion/git-prompt.sh
 . /usr/local/bin/colours.sh
 GIT_PS1_SHOWCOLORHINTS=true
+export EDITOR=nano
 
 PS1='\[$LightGreen\]\u@\h\[$NC\]:\[$LightBlue\]\w\[$Yellow\]$(__git_ps1)\[$NC\]\$ '
 
