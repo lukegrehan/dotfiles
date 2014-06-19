@@ -8,6 +8,9 @@ HISTIGNORE="history:l"
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
+shopt -s cdspell
+shopt -s extglob
+shopt -s checkjobs
 
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
