@@ -310,6 +310,14 @@ globalkeys = awful.util.table.join(
 
   --  ,awful.key({ modkey }, "v", function () rodentbane.start() end, "Start rodentbane")
 
+    ,awful.key({ modkey }, "F2", 
+      function()
+        local result = "master => "..awful.tag.getnmaster()
+        result = result .. "\ncol => "..awful.tag.getncol()
+        naughty.notify({ text = result,
+          hover_timeout = 0.1,
+          timeout = 2 }) 
+      end,"show number of master/slave windows")
     ,awful.key({ modkey }, "F1", keydoc.display)
     ,awful.key({ modkey, "Shift"   }, "n", 
         function()
