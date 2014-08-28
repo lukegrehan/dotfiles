@@ -224,7 +224,7 @@ globalkeys = awful.util.table.join(
     keydoc.group("Tag manipulation"),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ,"Change to left tag"),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ,"Change to right tag"),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,"Change to prev tag"),
+    awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,"Change to prev tag"),
 
     keydoc.group("Layout manipulation"),
     
