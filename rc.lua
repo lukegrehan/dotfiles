@@ -258,12 +258,20 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,"Quit awesome"),
 
     keydoc.group("Layout manipulation"),
+    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)
+                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,"Increase number of master windows"),
+    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)
+                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,"Decrease number of master windows"),
+    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)
+                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,"Increase number of slave columns"),
+    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)
+                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,"Decrease number of slave columns"),
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end,"Increase master window size"),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end,"Decrease master window size"),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end,"Increase number of master windows"),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end,"Decrease number of master windows"),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end,"Increase number of slave columns"),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end,"Decrease number of slave columns"),
+    -- awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end,),
+    -- awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
+    -- awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end,),
+    -- awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end,),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,"Cycle layout forward"),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,"Cycle layout backward"),
 
@@ -308,16 +316,6 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "b", function ()
       mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
 
-  --  ,awful.key({ modkey }, "v", function () rodentbane.start() end, "Start rodentbane")
-
-    ,awful.key({ modkey }, "F2", 
-      function()
-        local result = "master => "..awful.tag.getnmaster()
-        result = result .. "\ncol => "..awful.tag.getncol()
-        naughty.notify({ text = result,
-          hover_timeout = 0.1,
-          timeout = 2 }) 
-      end,"show number of master/slave windows")
     ,awful.key({ modkey }, "F1", keydoc.display)
     ,awful.key({ modkey, "Shift"   }, "n", 
         function()
