@@ -1,2 +1,3 @@
 #!/bin/bash
+notify-send "running backup"
 rdiff-backup --exclude '/home/luke/Dropbox/' --exclude '/home/luke/Pi/' --exclude '/home/luke/Downloads/' --exclude '/home/luke/.*'  /home/luke/ luke@lukegrehan.com::/home/luke/Backups

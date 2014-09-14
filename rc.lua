@@ -302,9 +302,9 @@ globalkeys = awful.util.table.join(
       awful.util.spawn("mocp --next",false) end),
 
     awful.key({ }, "XF86MonBrightnessDown", function()
-      awful.util.spawn("xbacklight -dec 10",false) end),
+      awful.util.spawn("xbacklight -dec 5",false) end),
     awful.key({ }, "XF86MonBrightnessUp", function()
-      awful.util.spawn("xbacklight -inc 10",false) end),
+      awful.util.spawn("xbacklight -inc 5",false) end),
 
     keydoc.group("Misc"),
     awful.key({ }, "Print", function () 
