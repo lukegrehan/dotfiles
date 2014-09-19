@@ -11,6 +11,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
+local minitray = require("minitray")
 local keydoc = require("keydoc")
 
 -- {{{ Error handling
@@ -197,7 +198,7 @@ for s = 1, screen.count() do
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
+    -- if s == 1 then right_layout:add(wibox.widget.systray()) end
     right_layout:add(batterywidget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -316,6 +317,10 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "b", function ()
       mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
 
+    ,awful.key({ modkey,           }, "s", 
+      function() 
+        minitray.toggle({ y=0, x=87, height = 19 }) 
+      end,"Toggle tray" )
     ,awful.key({ modkey }, "F1", keydoc.display)
     ,awful.key({ modkey, "Shift"   }, "n", 
         function()
