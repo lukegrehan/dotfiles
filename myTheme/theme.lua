@@ -1,5 +1,8 @@
-path = "/home/luke/.config/awesome/themes/myTheme"
+path = os.getenv("HOME").."/.config/awesome/themes/myTheme"
 theme = {}
+
+-- theme.icons      =  path .. "/icons"
+-- theme.taglist_bg_empty    = "png:" .. theme.icons .. "/empty.png"
 
 theme.font          = "tamsyn 10"
 
@@ -23,7 +26,7 @@ theme.taglist_squares_sel   = path.."/taglist/squarefw.png"
 theme.taglist_squares_unsel = path.."/taglist/squarew.png"
 
 -- You can use your own command to set your wallpaper
-theme.wallpaper=path.."/backgrounds/1.png"
+theme.wallpaper=path.."/backgrounds/pro-dark.png"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = path.."/layouts/fairhw.png"

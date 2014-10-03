@@ -42,6 +42,7 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
+-- beautiful.init(".config/awesome/themes/themes/pro-medium-dark/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "xterm"
@@ -99,28 +100,28 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 mytextclock = awful.widget.textclock()
 
 battery_warned = false
-batterywidget = wibox.widget.textbox()    
-batterywidget:set_text(" |***|")    
+batterywidget = wibox.widget.textbox()
+batterywidget:set_text(" |***|")
 batterywidgettimer = timer({ timeout = 5 })
-batterywidgettimer:connect_signal("timeout",    
-  function()    
+batterywidgettimer:connect_signal("timeout",
+  function()
     fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
     text = fh:read("*l")
     n = tonumber(text)
     if(n==100) then text = "charged"
     else text = text.."%" end
 
-    if (n>5) then 
-      battery_warned = false 
-    elseif(n<5 and not battery_warned) then 
+    if (n>5) then
+      battery_warned = false
+    elseif(n<5 and not battery_warned) then
       battery_warned = true
       naughty.notify({ preset = naughty.config.presets.critical,
-                    title = "low battery"}) 
+                    title = "low battery"})
     end
-    batterywidget:set_text(" |" .. text .. "|")    
-    fh:close()    
-  end    
-)    
+    batterywidget:set_text(" |" .. text .. "|")
+    fh:close()
+  end
+)
 batterywidgettimer:start()
 
 -- Create a wibox for each screen and add it
@@ -210,7 +211,7 @@ for s = 1, screen.count() do
     layout:set_right(right_layout)
 
     mywibox[s]:set_widget(layout)
-    
+
     -- local scrgeom = screen[mouse.screen].workarea
     -- mywibox[s]:geometry({ x = 0, y = scrgeom.y})
     -- mywibox[s].ontop = true
@@ -232,19 +233,19 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,"Change to prev tag"),
 
     keydoc.group("Layout manipulation"),
-    
+
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
-        end,"Focus next client in stack"), 
+        end,"Focus next client in stack"),
     awful.key({ modkey,           }, "k",
         function ()
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
-        end,"Focus prev client in stack"), 
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,"Swap next client"), 
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,"Swap prev client"), 
+        end,"Focus prev client in stack"),
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,"Swap next client"),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,"Swap prev client"),
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end ,"Focus next screen"),
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end ,"Focus prev screen"),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,"Jump to urgent"),
@@ -312,7 +313,7 @@ globalkeys = awful.util.table.join(
       awful.util.spawn("xbacklight -inc 5",false) end),
 
     keydoc.group("Misc"),
-    awful.key({ }, "Print", function () 
+    awful.key({ }, "Print", function ()
       awful.util.spawn_with_shell("scrot '%Y-%m-%d_%M-%S.png' -e 'mv $f ~/Pictures/screenshots/ ; notify-send --urgency=low Scrot took_screenshot'",false) end
       , "Take screenshot"),
     awful.key({ "Control", "Mod1" }, "l", function()
@@ -321,12 +322,12 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "b", function ()
       mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
 
-    ,awful.key({ modkey,           }, "s", 
-      function() 
-        minitray.toggle({ y=0, x=87, height = 19 }) 
+    ,awful.key({ modkey,           }, "s",
+      function()
+        minitray.toggle({ y=0, x=87, height = 19 })
       end,"Toggle tray" )
     ,awful.key({ modkey }, "F1", keydoc.display)
-    ,awful.key({ modkey, "Shift"   }, "n", 
+    ,awful.key({ modkey, "Shift"   }, "n",
         function()
             local tag = awful.tag.selected()
                 for i=1, #tag:clients() do
