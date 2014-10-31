@@ -11,5 +11,5 @@ alias mkreport='mkdir report && cd report && mkdir res && cp ~/Schoolwork/report
 alias t='tree'
 alias shutdown='shutdown now'
 alias valgrind='valgrind --vgdb=yes --vgdb-error=0'
-alias mntPi='mkdir -p ~/Pi && sshfs luke@lukegrehan.com:/home/luke ~/Pi'
+alias mntPi='mkdir -p ~/Pi && sshfs luke@lukegrehan.com:/home/luke ~/Pi && cd ~/Pi'
 alias unMntPi='sudo fusermount -u ~/Pi && rmdir ~/Pi'
