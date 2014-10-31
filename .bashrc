@@ -12,10 +12,13 @@ shopt -s cdspell
 shopt -s extglob
 shopt -s checkjobs
 
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+[ -x /usr/bin/lesspipe ] 
+	&& eval "$(SHELL=/bin/sh lesspipe)"
+[ -f /usr/share/git/completion/git-prompt.sh ] 
+	&& . /usr/share/git/completion/git-prompt.sh
+[ -x /usr/local/bin/colours.sh ] 
+	&& . /usr/local/bin/colours.sh
 
-. /usr/share/git/completion/git-prompt.sh
-. /usr/local/bin/colours.sh
 GIT_PS1_SHOWCOLORHINTS=true
 export EDITOR=nano
 
