@@ -3,6 +3,8 @@ local gears = require("gears")
 local awful = require("awful")
 awful.rules = require("awful.rules")
 require("awful.autofocus")
+require("eminent")
+
 -- Widget and layout library
 local wibox = require("wibox")
 -- Theme handling library
@@ -13,14 +15,9 @@ local naughty = require("naughty")
 local minitray = require("minitray")
 local keydoc = require("keydoc")
 
+local trayer = require("trayer")
+
 -- {{{ Error handling
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
-if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Oops, there were errors during startup!",
-                     text = awesome.startup_errors })
-end
 
 -- Handle runtime errors after startup
 do
@@ -41,7 +38,6 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
--- beautiful.init(".config/awesome/themes/themes/pro-medium-dark/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "xterm"
@@ -84,27 +80,38 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {}
+numTags = 10
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({"⌘", "♐", "⌥", "⌤"}, s, layouts[1])
+    -- tags[s] = awful.tag({"⌘", "♐", "⌥", "⌤"}, s, layouts[1])
+    local thisTags = {}
+    for i = 1, numTags do thisTags[i] = "⌘" end
+    tags[s] = awful.tag(thisTags, s, layouts[1])
 end
 -- }}}
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock()
+mytextclock = awful.widget.textclock("%H:%M ")
+
+batteryBar = awful.widget.progressbar()
+batteryBar:set_max_value(100)
+batteryBar:set_color(beautiful.fg_normal)
 
 battery_warned = false
-batterywidget = wibox.widget.textbox()
-batterywidget:set_text(" |***|")
-batterywidgettimer = timer({ timeout = 5 })
+-- batterywidget = wibox.widget.textbox()
+-- batterywidget:set_text(" |***|")
+batterywidgettimer = timer({ timeout = 15 })
 batterywidgettimer:connect_signal("timeout",
   function()
     fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
     text = fh:read("*l")
     n = tonumber(text)
-    if(n==100) then text = "charged"
-    else text = text.."%" end
+    batteryBar:set_value(n)
+    -- batteryBar:set_color
+
+    -- if(n==100) then text = "charged"
+    -- else text = text.."%" end
 
     if (n>5) then
       battery_warned = false
@@ -113,14 +120,16 @@ batterywidgettimer:connect_signal("timeout",
       naughty.notify({ preset = naughty.config.presets.critical,
                     title = "low battery"})
     end
-    batterywidget:set_text(" |" .. text .. "|")
+    -- batterywidget:set_text(" |" .. text .. "|")
     fh:close()
   end
 )
 batterywidgettimer:start()
 
+
 -- Create a wibox for each screen and add it
 mywibox = {}
+batWidget = {}
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
@@ -185,7 +194,7 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s })
+    mywibox[s] = awful.wibox({ position = "top", screen = s})
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -195,7 +204,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     -- if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(batterywidget)
+    -- right_layout:add(batterywidget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -207,9 +216,11 @@ for s = 1, screen.count() do
 
     mywibox[s]:set_widget(layout)
 
-    -- local scrgeom = screen[mouse.screen].workarea
-    -- mywibox[s]:geometry({ x = 0, y = scrgeom.y})
-    -- mywibox[s].ontop = true
+    -- mywibox[s] = trayer.new(s,right_layout, 200)
+    -- mywibox[s]:show()
+
+    batWidget[s] = awful.wibox({ position = "bottom", screen = s, height=3 })
+    batWidget[s]:set_widget(batteryBar)
 end
 -- }}}
 
@@ -221,11 +232,30 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 -- {{{ Key bindings
+local oldSelected = {}
+local hasSelection = false
+
 globalkeys = awful.util.table.join(
     keydoc.group("Tag manipulation"),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ,"Change to left tag"),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ,"Change to right tag"),
     awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,"Change to prev tag"),
+    awful.key({ modkey,           }, "Down", function ()
+      -- if(not oldSelected) then
+      local selected = awful.tag.selectedlist(mouse.screen)
+      if(not hasSelection) then
+        oldSelected = selected
+        hasSelection = true
+      end
+      awful.tag.viewnone()
+    end, "Deselect all current tags"),
+    awful.key({ modkey,           }, "Up", function ()
+      if(hasSelection) then
+        awful.tag.viewmore(oldSelected)
+        oldSelected = {}
+        hasSelection = false
+      end
+    end, "Reselect deselected tags"),
 
     keydoc.group("Layout manipulation"),
 
@@ -309,7 +339,7 @@ globalkeys = awful.util.table.join(
 
     keydoc.group("Misc"),
     awful.key({ }, "Print", function ()
-      awful.util.spawn_with_shell("scrot '%Y-%m-%d_%M-%S.png' -e 'mv $f ~/Pictures/screenshots/ ; notify-send --urgency=low Scrot took_screenshot'",false) end
+      awful.util.spawn_with_shell("scrot '%M-%S.png' -e 'mv $f ~; notify-send --urgency=low Scrot took_screenshot'",false) end
       , "Take screenshot"),
     awful.key({ "Control", "Mod1" }, "l", function()
       awful.util.spawn_with_shell("xscreensaver-command -lock") end, "Lock screen"),
@@ -350,7 +380,11 @@ clientkeys = awful.util.table.join(
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
-        end,"Minimise client")
+        end,"Minimise client"),
+    awful.key({ modkey, "Shift"   }, "s",
+        function (c)
+            c.sticky = not c.sticky
+        end,"Set client sticky")
 )
 
 -- Bind all key numbers to tags.
@@ -417,7 +451,7 @@ awful.rules.rules = {
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
-      properties = { floating = true } },
+      properties = { floating = true } }
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
