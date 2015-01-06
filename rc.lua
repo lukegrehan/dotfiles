@@ -12,7 +12,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 
-local minitray = require("minitray")
+-- local minitray = require("minitray")
 local keydoc = require("keydoc")
 
 local trayer = require("trayer")
@@ -92,7 +92,7 @@ end
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock("%H:%M ")
+mytextclock = awful.widget.textclock(" %H:%M ")
 
 batteryBar = awful.widget.progressbar()
 batteryBar:set_max_value(100)
@@ -129,6 +129,8 @@ batterywidgettimer:start()
 
 -- Create a wibox for each screen and add it
 mywibox = {}
+mw2 = {}
+mw3 = {}
 batWidget = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -157,12 +159,7 @@ for s = 1, screen.count() do
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s})
-
-    -- Widgets that are aligned to the left
-    local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(mytaglist[s])
-    left_layout:add(mypromptbox[s])
+    -- mywibox[s] = awful.wibox({ position = "top", screen = s})
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
@@ -172,15 +169,17 @@ for s = 1, screen.count() do
     right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
-    local layout = wibox.layout.align.horizontal()
-    layout:set_left(left_layout)
-    -- layout:set_middle(mytaglist[s])
-    layout:set_right(right_layout)
+    -- local layout = wibox.layout.align.horizontal()
+    -- layout:set_left(mytaglist[s])
+    -- layout:set_middle(mypromptbox[s])
+    -- layout:set_right(right_layout)
 
-    mywibox[s]:set_widget(layout)
+    -- mywibox[s]:set_widget(layout)
 
-    -- mywibox[s] = trayer.new(s,right_layout, 200)
-    -- mywibox[s]:show()
+    mywibox[s] = trayer.new(s, mytaglist[s], {x=(1600-50-70), width=50})
+    mw2[s] = trayer.new(s,right_layout, {x=(1600-70), width=70})
+    mw3[s] = trayer.new(s,mypromptbox[s], {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
+    -- mw3[s]:toggle()
 
     batWidget[s] = awful.wibox({ position = "bottom", screen = s, height=3 })
     batWidget[s]:set_widget(batteryBar)
@@ -274,7 +273,18 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end,"Run program"),
+    -- awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end,"Run program"),
+    awful.key({ modkey },            "r",     function ()
+      local screen = mouse.screen
+      local promptCont = mw3[screen]
+      promptCont:toggle()
+
+      awful.prompt.run({prompt = "Run: "}, mypromptbox[screen].widget,
+                function(s) end,
+                nil, nil, nil,
+                function() promptCont:toggle() end
+      )
+    end,"Run program"),
 
     -- awful.key({ modkey }, "y",
     --           function ()
@@ -307,14 +317,15 @@ globalkeys = awful.util.table.join(
     awful.key({ "Control", "Mod1" }, "l", function()
       awful.util.spawn_with_shell("xscreensaver-command -lock") end, "Lock screen"),
 
-    awful.key({ modkey }, "b", function ()
-      mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
+    -- awful.key({ modkey }, "b", function ()
+    --   mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
 
-    ,awful.key({ modkey,           }, "s",
-      function()
-        minitray.toggle({ y=0, x=87, height = 19 })
-      end,"Toggle tray" )
-    ,awful.key({ modkey }, "F1", keydoc.display)
+    -- ,awful.key({ modkey,           }, "s",
+    --   function()
+    --     minitray.toggle({ y=0, x=87, height = 19 })
+    --   end,"Toggle tray" )
+
+    awful.key({ modkey }, "F1", keydoc.display)
     ,awful.key({ modkey, "Shift"   }, "n",
         function()
             local tag = awful.tag.selected()
