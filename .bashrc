@@ -17,7 +17,8 @@ shopt -s checkjobs
 [ -f /usr/share/git/completion/git-prompt.sh ] &&
 	. /usr/share/git/completion/git-prompt.sh
 [ -x /usr/local/bin/colours.sh ] &&
-	. /usr/local/bin/colours.sh
+	. /usr/local/bin/colours.sh ||
+	. ~/dotfiles/colours.sh
 
 GIT_PS1_SHOWCOLORHINTS=true
 export EDITOR=nano
