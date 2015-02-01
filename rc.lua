@@ -326,7 +326,7 @@ globalkeys = awful.util.table.join(
       awful.util.spawn_with_shell("scrot '%M-%S.png' -e 'mv $f ~; notify-send --urgency=low Scrot took_screenshot'",false) end
       , "Take screenshot"),
     awful.key({ "Control", "Mod1" }, "l", function()
-      awful.util.spawn_with_shell("xscreensaver-command -lock") end, "Lock screen"),
+      awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
 
     -- awful.key({ modkey }, "b", function ()
     --   mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
