@@ -22,3 +22,7 @@ set ruler
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
 set so=998
+syntax on
+
+colorscheme monokai
+
