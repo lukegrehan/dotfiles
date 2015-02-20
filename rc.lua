@@ -67,13 +67,13 @@ end
 -- }}}
 
 -- {{{ Wibox
-mw3 = {}
-mypromptbox = {}
+promptTray = {}
+promptbox = {}
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
-    mypromptbox[s] = awful.widget.prompt()
-    mw3[s] = trayer.new(s,mypromptbox[s], {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
+    promptbox[s] = awful.widget.prompt()
+    promptTray[s] = trayer.new(s,promptbox[s], {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
 end
 -- }}}
 
@@ -160,14 +160,14 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey, "Shift" },            "r",     function () mypromptbox[mouse.screen]:run() end,"Run program"),
+    awful.key({ modkey, "Shift" },            "r",     function () promptbox[mouse.screen]:run() end,"Run program"),
     awful.key({ modkey },            "r",     function ()
       local screen = mouse.screen
-      local promptCont = mw3[screen]
+      local promptCont = promptTray[screen]
       promptCont:toggle()
 
       awful.prompt.run({prompt = "Run: "},
-                mypromptbox[screen].widget,
+                promptbox[screen].widget,
                 function (...)
                           local result = awful.util.spawn(...)
                           if type(result) == "string" then
