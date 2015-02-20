@@ -1,12 +1,13 @@
 -- Standard awesome library
-local gears = require("gears")
-local awful = require("awful")
-awful.rules = require("awful.rules")
-local wibox = require("wibox")
-local beautiful = require("beautiful")
-local naughty = require("naughty")
-local keydoc = require("keydoc")
-local trayer = require("trayer")
+local gears       = require("gears")
+local awful       = require("awful")
+      awful.rules = require("awful.rules")
+local wibox       = require("wibox")
+local beautiful   = require("beautiful")
+local naughty     = require("naughty")
+local keydoc      = require("keydoc")
+local trayer      = require("trayer")
+
 require("awful.autofocus")
 require("eminent")
 
@@ -61,7 +62,7 @@ for s = 1, screen.count() do
     -- Each screen has its own tag table.
     -- tags[s] = awful.tag({"⌘", "♐", "⌥", "⌤"}, s, layouts[1])
     local thisTags = {}
-    for i = 1, numTags do thisTags[i] = "⌘" end
+    for i = 1, numTags do thisTags[i] = "                " end
     tags[s] = awful.tag(thisTags, s, layouts[1])
 end
 -- }}}
@@ -69,11 +70,27 @@ end
 -- {{{ Wibox
 promptTray = {}
 promptbox = {}
+taglistTray = {}
+taglist = {}
+taglist.buttons = awful.util.table.join(
+                    awful.button({ }, 1, awful.tag.viewonly),
+                    awful.button({ }, 3, awful.tag.viewtoggle)
+                    )
+-- mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
     promptbox[s] = awful.widget.prompt()
-    promptTray[s] = trayer.new(s,promptbox[s], {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
+    promptTray[s] = trayer.new(s,promptbox[s],
+      {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
+
+    taglistTray[s] = awful.wibox({ position = "bottom", screen = s, height=8 })
+
+    local layout = wibox.layout.align.horizontal()
+    taglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist.buttons)
+    layout:set_middle(taglist[s])
+
+    taglistTray[s]:set_widget(layout)
 end
 -- }}}
 

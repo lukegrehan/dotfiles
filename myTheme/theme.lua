@@ -22,8 +22,8 @@ theme.border_focus  = "#386799"
 theme.border_marked = "#91231c"
 
 -- Display the taglist squares
-theme.taglist_squares_sel   = path.."/taglist/squarefw.png"
-theme.taglist_squares_unsel = path.."/taglist/squarew.png"
+theme.taglist_squares_sel   = path.."/taglist/sel.png"
+theme.taglist_squares_unsel = path.."/taglist/unsel.png"
 
 -- You can use your own command to set your wallpaper
 theme.wallpaper=path.."/backgrounds/pro-dark.png"
