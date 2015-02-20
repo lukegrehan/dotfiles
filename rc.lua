@@ -2,41 +2,14 @@
 local gears = require("gears")
 local awful = require("awful")
 awful.rules = require("awful.rules")
+local wibox = require("wibox")
+local beautiful = require("beautiful")
+local naughty = require("naughty")
+local keydoc = require("keydoc")
+local trayer = require("trayer")
 require("awful.autofocus")
 require("eminent")
 
--- Widget and layout library
-local wibox = require("wibox")
--- Theme handling library
-local beautiful = require("beautiful")
--- Notification library
-local naughty = require("naughty")
-
--- local minitray = require("minitray")
-local keydoc = require("keydoc")
-
-local trayer = require("trayer")
-
-local completion = require("awful.completion")
-local util = require("awful.util")
-
--- {{{ Error handling
-
--- Handle runtime errors after startup
-do
-    local in_error = false
-    awesome.connect_signal("debug::error", function (err)
-        -- Make sure we don't go into an endless error loop
-        if in_error then return end
-        in_error = true
-
-        naughty.notify({ preset = naughty.config.presets.critical,
-                         title = "Oops, an error happened!",
-                         text = err })
-        in_error = false
-    end)
-end
--- }}}
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
@@ -94,98 +67,13 @@ end
 -- }}}
 
 -- {{{ Wibox
--- Create a textclock widget
--- mytextclock = awful.widget.textclock(" %H:%M ")
-
--- batteryBar = awful.widget.progressbar()
--- batteryBar:set_max_value(100)
--- batteryBar:set_color(beautiful.fg_normal)
-
--- battery_warned = false
--- -- batterywidget = wibox.widget.textbox()
--- -- batterywidget:set_text(" |***|")
--- batterywidgettimer = timer({ timeout = 15 })
--- batterywidgettimer:connect_signal("timeout",
---   function()
---     fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
---     text = fh:read("*l")
---     n = tonumber(text)
---     batteryBar:set_value(n)
---     -- batteryBar:set_color
-
---     -- if(n==100) then text = "charged"
---     -- else text = text.."%" end
-
---     if (n>5) then
---       battery_warned = false
---     elseif(n<5 and not battery_warned) then
---       battery_warned = true
---       naughty.notify({ preset = naughty.config.presets.critical,
---                     title = "low battery"})
---     end
---     -- batterywidget:set_text(" |" .. text .. "|")
---     fh:close()
---   end
--- )
--- batterywidgettimer:start()
-
-
--- Create a wibox for each screen and add it
--- mywibox = {}
--- mw2 = {}
 mw3 = {}
-batWidget = {}
 mypromptbox = {}
--- mylayoutbox = {}
--- mytaglist = {}
--- mytaglist.buttons = awful.util.table.join(
---                     awful.button({ }, 1, awful.tag.viewonly),
---                     awful.button({ modkey }, 1, awful.client.movetotag),
---                     awful.button({ }, 3, awful.tag.viewtoggle),
---                     awful.button({ modkey }, 3, awful.client.toggletag),
---                     awful.button({ }, 4, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end),
---                     awful.button({ }, 5, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end)
---                     )
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    -- mylayoutbox[s] = awful.widget.layoutbox(s)
-    -- mylayoutbox[s]:buttons(awful.util.table.join(
-    --                        awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
-    --                        awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
-    --                        awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
-    --                        awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
-    -- Create a taglist widget
-    -- mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
-
-    -- Create the wibox
-    -- mywibox[s] = awful.wibox({ position = "top", screen = s})
-
-    -- Widgets that are aligned to the right
-    -- local right_layout = wibox.layout.fixed.horizontal()
-    -- if s == 1 then right_layout:add(wibox.widget.systray()) end
-    -- right_layout:add(batterywidget)
-    -- right_layout:add(mytextclock)
-    -- right_layout:add(mylayoutbox[s])
-
-    -- Now bring it all together (with the tasklist in the middle)
-    -- local layout = wibox.layout.align.horizontal()
-    -- layout:set_left(mytaglist[s])
-    -- layout:set_middle(mypromptbox[s])
-    -- layout:set_right(right_layout)
-
-    -- mywibox[s]:set_widget(layout)
-
-    -- mywibox[s] = trayer.new(s, mytaglist[s], {x=(1600-50-70), width=50})
-    -- mw2[s] = trayer.new(s,right_layout, {x=(1600-70), width=70})
     mw3[s] = trayer.new(s,mypromptbox[s], {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
-    -- mw3[s]:toggle()
-
-    batWidget[s] = awful.wibox({ position = "bottom", screen = s, height=3 })
-    batWidget[s]:set_widget(batteryBar)
 end
 -- }}}
 
@@ -264,10 +152,6 @@ globalkeys = awful.util.table.join(
                                              naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,"Decrease number of slave columns"),
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end,"Increase master window size"),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end,"Decrease master window size"),
-    -- awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end,),
-    -- awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
-    -- awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end,),
-    -- awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end,),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,"Cycle layout forward"),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,"Cycle layout backward"),
 
@@ -285,25 +169,17 @@ globalkeys = awful.util.table.join(
       awful.prompt.run({prompt = "Run: "},
                 mypromptbox[screen].widget,
                 function (...)
-                          local result = util.spawn(...)
+                          local result = awful.util.spawn(...)
                           if type(result) == "string" then
                               promptbox.widget:set_text(result)
                           end
                       end,
-                completion.shell,
-                util.getdir("cache") .. "/history",
+                awful.completion.shell,
+                awful.util.getdir("cache") .. "/history",
                 nil,
                 function() promptCont:toggle() end
       )
     end,"Run program"),
-
-    -- awful.key({ modkey }, "y",
-    --           function ()
-    --               awful.prompt.run({ prompt = "Run Lua code: " },
-    --               mypromptbox[mouse.screen].widget,
-    --               awful.util.eval, nil,
-    --               awful.util.getdir("cache") .. "/history_eval")
-    --           end),
 
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("amixer set Master 5%+",false) end),
@@ -328,21 +204,12 @@ globalkeys = awful.util.table.join(
     awful.key({ "Control", "Mod1" }, "l", function()
       awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
 
-    -- awful.key({ modkey }, "b", function ()
-    --   mywibox[mouse.screen].visible = not mywibox[mouse.screen].visible end,"Hide/show menubar")
-
-    -- ,awful.key({ modkey,           }, "s",
-    --   function()
-    --     minitray.toggle({ y=0, x=87, height = 19 })
-    --   end,"Toggle tray" )
-
-    awful.key({ modkey }, "F1", keydoc.display)
+    awful.key({ modkey }, "F1", keydoc.display, "Show help")
     ,awful.key({ modkey, "Shift"   }, "n",
         function()
             local tag = awful.tag.selected()
             for i=1, #tag:clients() do
               tag:clients()[i].minimized=false
-              -- tag:clients()[i]:redraw()
             end
         end,"Unminimise all")
 
@@ -362,10 +229,8 @@ globalkeys = awful.util.table.join(
             battery, date)
 
           return naughty.notify({
-            text = text,
-            icon=icon,
-            icon_size=15,
-            replaces_id=prev,
+            text = text, icon=icon,
+            icon_size=15, replaces_id=prev,
             timeout=0})
         end
 
@@ -373,17 +238,18 @@ globalkeys = awful.util.table.join(
         local mainTimer = timer({timeout=6})
         local updateTimer = timer({timeout=0.75})
         mainTimer:connect_signal("timeout", function()
-          updateTimer:stop()
-          naughty.destroy(prev)
-          mainTimer:stop()
+            updateTimer:stop()
+            naughty.destroy(prev)
+            mainTimer:stop()
         end)
 
-        updateTimer:connect_signal("timeout",
-          function() prev = updateStats(prev.id) end)
+        updateTimer:connect_signal("timeout", function()
+          prev = updateStats(prev.id)
+        end)
 
         mainTimer:start()
         updateTimer:start()
-      end
+      end, "Show status bar"
     )
 )
 
