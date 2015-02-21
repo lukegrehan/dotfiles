@@ -94,6 +94,32 @@ for s = 1, screen.count() do
 end
 -- }}}
 
+-- {{{ Battery Warning
+battery_val = "???"
+battery_warn_parcent = 5
+battery_warned = false
+
+batterytimer = timer({ timeout = 15 })
+batterytimer:connect_signal("timeout",
+  function()
+    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
+    text = fh:read("*l")
+    fh:close()
+
+    battery_val = tonumber(text)
+    if (battery_val>battery_warn_parcent) then
+      battery_warned = false
+    elseif(battery_val<battery_warn_parcent and not battery_warned) then
+      battery_warned = true
+      naughty.notify({ preset = naughty.config.presets.critical,
+                    title = "low battery"})
+    end
+  end
+)
+batterytimer:start()
+
+-- }}}
+
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
     awful.button({ }, 4, awful.tag.viewprev),
@@ -233,17 +259,13 @@ globalkeys = awful.util.table.join(
     ,awful.key({ modkey }, "s",
       function()
         local function updateStats(prev)
-          local fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
-          local battery = tonumber(fh:read("*l"))
-          fh:close()
-
           local date = os.date("%a %b %d, %H:%M ")
 
           local layout = awful.layout.getname(awful.layout.get(1))
           local icon = layout and beautiful["layout_" .. layout]
 
           local text = string.format('%s%% | %s',
-            battery, date)
+            battery_val, date)
 
           return naughty.notify({
             text = text, icon=icon,
