@@ -67,10 +67,42 @@ for s = 1, screen.count() do
 end
 -- }}}
 
+-- {{{ Battery Warning
+battery_val = "???"
+battery_warn_parcent = 5
+battery_warned = false
+
+batterywidget = wibox.widget.textbox()
+batterywidget:set_text(" ???% | ")
+
+batterytimer = timer({ timeout = 15 })
+batterytimer:connect_signal("timeout",
+  function()
+    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
+    text = fh:read("*l")
+    fh:close()
+    batterywidget:set_text(" " .. text .. "% | ")
+
+    battery_val = tonumber(text)
+    if (battery_val>battery_warn_parcent) then
+      battery_warned = false
+    elseif(battery_val<battery_warn_parcent and not battery_warned) then
+      battery_warned = true
+      naughty.notify({ preset = naughty.config.presets.critical,
+                    title = "low battery"})
+    end
+  end
+)
+batterytimer:start()
+
+-- }}}
+
 -- {{{ Wibox
+statusTray = {}
 promptTray = {}
 promptbox = {}
 taglistTray = {}
+layoutBox = {}
 taglist = {}
 taglist.buttons = awful.util.table.join(
                     awful.button({ }, 1, awful.tag.viewonly),
@@ -91,33 +123,16 @@ for s = 1, screen.count() do
     layout:set_middle(taglist[s])
 
     taglistTray[s]:set_widget(layout)
+
+    layoutBox[s] = awful.widget.layoutbox(s)
+
+    local layout2 = wibox.layout.fixed.horizontal()
+    layout2:add(layoutBox[s])
+    layout2:add(batterywidget)
+    layout2:add(awful.widget.textclock("%a %b %d, %H:%M "))
+
+    statusTray[s] = trayer.new(s,layout2, {x=(1600-500), width=500})
 end
--- }}}
-
--- {{{ Battery Warning
-battery_val = "???"
-battery_warn_parcent = 5
-battery_warned = false
-
-batterytimer = timer({ timeout = 15 })
-batterytimer:connect_signal("timeout",
-  function()
-    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
-    text = fh:read("*l")
-    fh:close()
-
-    battery_val = tonumber(text)
-    if (battery_val>battery_warn_parcent) then
-      battery_warned = false
-    elseif(battery_val<battery_warn_parcent and not battery_warned) then
-      battery_warned = true
-      naughty.notify({ preset = naughty.config.presets.critical,
-                    title = "low battery"})
-    end
-  end
-)
-batterytimer:start()
-
 -- }}}
 
 -- {{{ Mouse bindings
