@@ -116,7 +116,8 @@ for s = 1, screen.count() do
     promptTray[s] = trayer.new(s,promptbox[s],
       {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
 
-    taglistTray[s] = awful.wibox({ position = "bottom", screen = s, height=8 })
+    taglistTray[s] = awful.wibox(
+      { position = "bottom", screen = s, height=8 })
 
     local layout = wibox.layout.align.horizontal()
     taglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist.buttons)
@@ -127,11 +128,11 @@ for s = 1, screen.count() do
     layoutBox[s] = awful.widget.layoutbox(s)
 
     local layout2 = wibox.layout.fixed.horizontal()
-    layout2:add(layoutBox[s])
     layout2:add(batterywidget)
     layout2:add(awful.widget.textclock("%a %b %d, %H:%M "))
+    layout2:add(layoutBox[s])
 
-    statusTray[s] = trayer.new(s,layout2, {x=(1600-500), width=500})
+    statusTray[s] = trayer.new(s,layout2, {x=(1600-210), y=5, width=205})
     statusTray[s]:toggle()
 end
 -- }}}
