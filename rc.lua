@@ -132,6 +132,7 @@ for s = 1, screen.count() do
     layout2:add(awful.widget.textclock("%a %b %d, %H:%M "))
 
     statusTray[s] = trayer.new(s,layout2, {x=(1600-500), width=500})
+    statusTray[s]:toggle()
 end
 -- }}}
 
@@ -273,36 +274,25 @@ globalkeys = awful.util.table.join(
 
     ,awful.key({ modkey }, "s",
       function()
-        local function updateStats(prev)
-          local date = os.date("%a %b %d, %H:%M ")
-
-          local layout = awful.layout.getname(awful.layout.get(1))
-          local icon = layout and beautiful["layout_" .. layout]
-
-          local text = string.format('%s%% | %s',
-            battery_val, date)
-
-          return naughty.notify({
-            text = text, icon=icon,
-            icon_size=15, replaces_id=prev,
-            timeout=0})
-        end
-
-        local prev = updateStats()
         local mainTimer = timer({timeout=6})
-        local updateTimer = timer({timeout=0.75})
-        mainTimer:connect_signal("timeout", function()
-            updateTimer:stop()
-            naughty.destroy(prev)
+        mainTimer:connect_signal("timeout",
+          function()
+            statusTray[mouse.screen]:toggle()
             mainTimer:stop()
-        end)
+          end)
+        statusTray[mouse.screen]:toggle()
+        -- local updateTimer = timer({timeout=0.75})
+            -- updateTimer:stop()
+            -- naughty.destroy(prev)
+            -- mainTimer:stop()
 
-        updateTimer:connect_signal("timeout", function()
-          prev = updateStats(prev.id)
-        end)
+
+        -- updateTimer:connect_signal("timeout", function()
+        --   prev = updateStats(prev.id)
+        -- end)
 
         mainTimer:start()
-        updateTimer:start()
+        -- updateTimer:start()
       end, "Show status bar"
     )
 )
