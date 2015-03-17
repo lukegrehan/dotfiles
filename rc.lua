@@ -275,25 +275,17 @@ globalkeys = awful.util.table.join(
 
     ,awful.key({ modkey }, "s",
       function()
-        local mainTimer = timer({timeout=6})
-        mainTimer:connect_signal("timeout",
+        local toggleTray = function() statusTray[mouse.screen]:toggle() end
+        local hideTimer = timer({timeout=6})
+        hideTimer:connect_signal("timeout",
           function()
-            statusTray[mouse.screen]:toggle()
-            mainTimer:stop()
+            toggleTray()
+            hideTimer:stop()
           end)
-        statusTray[mouse.screen]:toggle()
-        -- local updateTimer = timer({timeout=0.75})
-            -- updateTimer:stop()
-            -- naughty.destroy(prev)
-            -- mainTimer:stop()
 
+        toggleTray()
+        hideTimer:start()
 
-        -- updateTimer:connect_signal("timeout", function()
-        --   prev = updateStats(prev.id)
-        -- end)
-
-        mainTimer:start()
-        -- updateTimer:start()
       end, "Show status bar"
     )
 )
