@@ -55,12 +55,9 @@ end
 -- }}}
 
 -- {{{ Tags
--- Define a tag table which hold all screen tags.
 tags = {}
 numTags = 10
 for s = 1, screen.count() do
-    -- Each screen has its own tag table.
-    -- tags[s] = awful.tag({"⌘", "♐", "⌥", "⌤"}, s, layouts[1])
     local thisTags = {}
     for i = 1, numTags do thisTags[i] = "                " end
     tags[s] = awful.tag(thisTags, s, layouts[1])
@@ -108,40 +105,42 @@ taglist.buttons = awful.util.table.join(
                     awful.button({ }, 1, awful.tag.viewonly),
                     awful.button({ }, 3, awful.tag.viewtoggle)
                     )
--- mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
 for s = 1, screen.count() do
-    -- Create a promptbox for each screen
     promptbox[s] = awful.widget.prompt()
-    promptTray[s] = trayer.new(s,promptbox[s],
-      {x=(1600/2)-(200/2), y=(900/2), width=200, visible=false})
-
-    taglistTray[s] = awful.wibox(
-      { position = "bottom", screen = s, height=8 })
-
-    local layout = wibox.layout.align.horizontal()
     taglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist.buttons)
-    layout:set_middle(taglist[s])
-
-    taglistTray[s]:set_widget(layout)
-
     layoutBox[s] = awful.widget.layoutbox(s)
 
-    local layout2 = wibox.layout.fixed.horizontal()
-    layout2:add(batterywidget)
-    layout2:add(awful.widget.textclock("%a %b %d, %H:%M "))
-    layout2:add(layoutBox[s])
+    local taglistLayout = wibox.layout.align.horizontal()
+      taglistLayout:set_middle(taglist[s])
 
-    statusTray[s] = trayer.new(s,layout2, {x=(1600-210), y=5, width=205})
+    local statusLayout = wibox.layout.fixed.horizontal()
+      statusLayout:add(batterywidget)
+      statusLayout:add(awful.widget.textclock("%a %b %d, %H:%M "))
+      statusLayout:add(layoutBox[s])
+
+    promptTray[s] = trayer.new(s,promptbox[s], {
+        x=(1600/2)-(200/2),
+        y=(900/2),
+        width=200,
+        visible=false
+    })
+
+    taglistTray[s] = awful.wibox({
+      position = "bottom",
+      screen = s,
+      height=8
+    })
+
+    statusTray[s] = trayer.new(s,statusLayout, {
+      x = (1600-210),
+      y=5,
+      width=205
+    })
+
+    taglistTray[s]:set_widget(taglistLayout)
     statusTray[s]:toggle()
 end
--- }}}
-
--- {{{ Mouse bindings
-root.buttons(awful.util.table.join(
-    awful.button({ }, 4, awful.tag.viewprev),
-    awful.button({ }, 5, awful.tag.viewnext)
-))
 -- }}}
 
 -- {{{ Key bindings
@@ -154,7 +153,6 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ,"Change to right tag"),
     awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,"Change to prev tag"),
     awful.key({ modkey,           }, "Down", function ()
-      -- if(not oldSelected) then
       local selected = awful.tag.selectedlist(mouse.screen)
       if(not hasSelection) then
         oldSelected = selected
@@ -374,8 +372,6 @@ awful.rules.rules = {
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
                      buttons = clientbuttons } },
-    { rule = { class = "MPlayer" },
-      properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
@@ -398,11 +394,6 @@ client.connect_signal("manage", function (c, startup)
     end)
 
     if not startup then
-        -- Set the windows at the slave,
-        -- i.e. put it at the end of others instead of setting it master.
-        -- awful.client.setslave(c)
-
-        -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
             awful.placement.no_overlap(c)
             awful.placement.no_offscreen(c)
