@@ -46,4 +46,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+if [ -n "$VIRTUAL_ENV" ]; then
+    . "$VIRTUAL_ENV/bin/activate"
+fi
+
 tmux a

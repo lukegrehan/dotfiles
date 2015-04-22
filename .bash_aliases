@@ -14,3 +14,4 @@ alias mntPi='mkdir -p ~/Pi && sshfs luke@lukegrehan.com:/home/luke ~/Pi && cd ~/
 alias unMntPi='sudo fusermount -u ~/Pi && rmdir ~/Pi'
 alias tmux='tmux -2'
 alias mklatex='latexmk -pvc -pdf'
+alias v='vim'
