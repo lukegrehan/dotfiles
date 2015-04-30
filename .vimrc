@@ -31,6 +31,9 @@ set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 set autoread
 
+"keys to wrap lines on
+set whichwrap+=<,>,h,l,[,]
+
 " move to beginning/end of line
 nnoremap B ^
 nnoremap E $
