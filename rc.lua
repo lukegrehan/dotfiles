@@ -404,3 +404,41 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+-- TODO: urgency tags
+local hideTimer = timer({timeout=2})
+local count = 10
+hideTimer:connect_signal("timeout",
+  function()
+    local tag = require("awful.tag")
+    local sel = nil
+    local unSel = nil
+    for k, t in ipairs(tag.gettags(mouse.screen)) do
+      local cls = t:clients()
+      if t.selected then
+        if sel then
+          sel = sel..", "..k
+        else 
+          sel = ""..k 
+        end
+      else 
+          if unSel then
+            unSel = unSel..", "..k
+          else
+            unSel = ""..k
+          end
+      end
+    end
+    local toPrint = "["..sel.."], "..unSel
+    print(toPrint)
+
+    count = count - 1
+    if(count == 0) then
+      hideTimer:stop()
+    end
+  end)
+
+hideTimer:start()
+
+
+
