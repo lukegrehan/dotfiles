@@ -20,13 +20,8 @@ beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 terminal = "xterm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
-
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+numTags = 10
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
@@ -56,30 +51,40 @@ end
 
 -- {{{ Tags
 tags = {}
-numTags = 10
-for s = 1, screen.count() do
-    local thisTags = {}
-    for i = 1, numTags do thisTags[i] = "                " end
-    tags[s] = awful.tag(thisTags, s, layouts[1])
-end
-
-print("---")
-tagsWidget_ = wibox.widget.textbox("|")
+tagsWidget = wibox.widget.textbox("|")
 function setStats(screen)
   local sel = {}
   local unSel = {}
-  for k, t in ipairs(awful.tag.gettags(screen)) do
+  for _, t in ipairs(awful.tag.gettags(screen)) do
     if(#t:clients() > 0) then
       if t.selected then
-        table.insert(sel,k)
+        table.insert(sel,t.name)
       else 
-        table.insert(unSel,k)
+        table.insert(unSel,t.name)
       end
     end
   end
 
   local text = "["..table.concat(sel, ",").."] "..table.concat(unSel, ",").." | "
-  tagsWidget_:set_text(text)
+  tagsWidget:set_text(text)
+end
+
+for s = 1, screen.count() do
+    local thisTags = {}
+    for i = 1, numTags do thisTags[i] = i end
+    tags[s] = awful.tag(thisTags, s, layouts[1])
+
+    local u = function () setStats(s) end
+
+    client.connect_signal("focus", u)
+    client.connect_signal("unfocus", u)
+    client.connect_signal("tagged", u)
+    client.connect_signal("untagged", u)
+
+    for _, prop in ipairs({ "property::selected", "property::name",
+      "property::activated", "property::screen", "property::index" }) do
+      awful.tag.attached_connect_signal(s, prop, u)
+    end  
 end
 
 -- }}}
@@ -118,27 +123,15 @@ batterytimer:start()
 statusTray = {}
 promptTray = {}
 promptbox = {}
-taglistTray = {}
-layoutBox = {}
-taglist = {}
-taglist.buttons = awful.util.table.join(
-                    awful.button({ }, 1, awful.tag.viewonly),
-                    awful.button({ }, 3, awful.tag.viewtoggle)
-                    )
 
 for s = 1, screen.count() do
     promptbox[s] = awful.widget.prompt()
-    taglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist.buttons)
-    layoutBox[s] = awful.widget.layoutbox(s)
-
-    local taglistLayout = wibox.layout.align.horizontal()
-      taglistLayout:set_middle(taglist[s])
 
     local statusLayout = wibox.layout.fixed.horizontal()
       statusLayout:add(batterywidget)
-      statusLayout:add(tagsWidget_)
+      statusLayout:add(tagsWidget)
       statusLayout:add(awful.widget.textclock("%a %b %d, %H:%M "))
-      statusLayout:add(layoutBox[s])
+      statusLayout:add(awful.widget.layoutbox(s))
 
     promptTray[s] = trayer.new(s,promptbox[s], {
         x=(1600/2)-(200/2),
@@ -147,36 +140,15 @@ for s = 1, screen.count() do
         visible=false
     })
 
-    taglistTray[s] = awful.wibox({
-      position = "bottom",
-      screen = s,
-      height=8
-    })
-
     statusTray[s] = trayer.new(s,statusLayout, {
-      x = (1600-305),
+      x = (1600-270),
       y=5,
-      width=300
+      width=265
     })
 
-    taglistTray[s]:set_widget(taglistLayout)
     statusTray[s]:toggle()
 end
 -- }}}
-
-for s = 1,screen.count() do
-  local u = function () setStats(s) end
-
-  client.connect_signal("focus", u)
-  client.connect_signal("unfocus", u)
-  client.connect_signal("tagged", u)
-  client.connect_signal("untagged", u)
-
-  for _, prop in ipairs({ "property::selected", "property::name",
-    "property::activated", "property::screen", "property::index" }) do
-    awful.tag.attached_connect_signal(s, prop, u)
-  end
-end
 
 -- {{{ Key bindings
 local oldSelected = {}
