@@ -62,6 +62,26 @@ for s = 1, screen.count() do
     for i = 1, numTags do thisTags[i] = "                " end
     tags[s] = awful.tag(thisTags, s, layouts[1])
 end
+
+print("---")
+tagsWidget_ = wibox.widget.textbox("|")
+function setStats(screen)
+  local sel = {}
+  local unSel = {}
+  for k, t in ipairs(awful.tag.gettags(screen)) do
+    if(#t:clients() > 0) then
+      if t.selected then
+        table.insert(sel,k)
+      else 
+        table.insert(unSel,k)
+      end
+    end
+  end
+
+  local text = "["..table.concat(sel, ",").."] "..table.concat(unSel, ",").." | "
+  tagsWidget_:set_text(text)
+end
+
 -- }}}
 
 -- {{{ Battery Warning
@@ -116,6 +136,7 @@ for s = 1, screen.count() do
 
     local statusLayout = wibox.layout.fixed.horizontal()
       statusLayout:add(batterywidget)
+      statusLayout:add(tagsWidget_)
       statusLayout:add(awful.widget.textclock("%a %b %d, %H:%M "))
       statusLayout:add(layoutBox[s])
 
@@ -133,15 +154,29 @@ for s = 1, screen.count() do
     })
 
     statusTray[s] = trayer.new(s,statusLayout, {
-      x = (1600-210),
+      x = (1600-305),
       y=5,
-      width=205
+      width=300
     })
 
     taglistTray[s]:set_widget(taglistLayout)
     statusTray[s]:toggle()
 end
 -- }}}
+
+for s = 1,screen.count() do
+  local u = function () setStats(s) end
+
+  client.connect_signal("focus", u)
+  client.connect_signal("unfocus", u)
+  client.connect_signal("tagged", u)
+  client.connect_signal("untagged", u)
+
+  for _, prop in ipairs({ "property::selected", "property::name",
+    "property::activated", "property::screen", "property::index" }) do
+    awful.tag.attached_connect_signal(s, prop, u)
+  end
+end
 
 -- {{{ Key bindings
 local oldSelected = {}
@@ -409,41 +444,3 @@ client.connect_signal("property::urgent", function(c)
   end
 end)
 -- }}}
-
-print("---")
-local tag = require("awful.tag")
-local hideTimer = timer({timeout=4})
-local count = 10
-
-local updateStats = function()
-  local ret = {}
-  ret.sel = {}
-  ret.unSel = {}
-
-  for k, t in ipairs(tag.gettags(mouse.screen)) do
-    if(#t:clients() > 0) then
-      if t.selected then
-        table.insert(ret.sel,k)
-      else 
-        table.insert(ret.unSel,k)
-      end
-    end
-  end
-
-  return ret
-end
-
-hideTimer:connect_signal("timeout",
-  function()
-    local s = updateStats()
-    local toPrint = "["..table.concat(s.sel, ",").."] "..table.concat(s.unSel, ",")
-    print(toPrint)
-
-    count = count - 1
-    if(count == 0) then
-      hideTimer:stop()
-    end
-  end)
-
---hideTimer:start()
-
