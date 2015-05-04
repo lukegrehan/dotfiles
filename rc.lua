@@ -406,30 +406,33 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 -- TODO: urgency tags
-local hideTimer = timer({timeout=2})
+print("---")
+local tag = require("awful.tag")
+local hideTimer = timer({timeout=4})
 local count = 10
-hideTimer:connect_signal("timeout",
-  function()
-    local tag = require("awful.tag")
-    local sel = nil
-    local unSel = nil
-    for k, t in ipairs(tag.gettags(mouse.screen)) do
-      local cls = t:clients()
+
+local updateStats = function()
+  local ret = {}
+  ret.sel = {}
+  ret.unSel = {}
+
+  for k, t in ipairs(tag.gettags(mouse.screen)) do
+    if(#t:clients() > 0) then
       if t.selected then
-        if sel then
-          sel = sel..", "..k
-        else 
-          sel = ""..k 
-        end
+        table.insert(ret.sel,k)
       else 
-          if unSel then
-            unSel = unSel..", "..k
-          else
-            unSel = ""..k
-          end
+        table.insert(ret.unSel,k)
       end
     end
-    local toPrint = "["..sel.."], "..unSel
+  end
+
+  return ret
+end
+
+hideTimer:connect_signal("timeout",
+  function()
+    local s = updateStats()
+    local toPrint = "["..table.concat(s.sel, ",").."] "..table.concat(s.unSel, ",")
     print(toPrint)
 
     count = count - 1
@@ -439,6 +442,4 @@ hideTimer:connect_signal("timeout",
   end)
 
 hideTimer:start()
-
-
 
