@@ -403,9 +403,13 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("property::urgent", function(c) 
+  if(c.urgent) then
+    naughty.notify({text="URGENT: "..c.class}) 
+  end
+end)
 -- }}}
 
--- TODO: urgency tags
 print("---")
 local tag = require("awful.tag")
 local hideTimer = timer({timeout=4})
@@ -441,5 +445,5 @@ hideTimer:connect_signal("timeout",
     end
   end)
 
-hideTimer:start()
+--hideTimer:start()
 
