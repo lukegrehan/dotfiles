@@ -13,6 +13,22 @@ end
 -- Module tray
 local tray = {}
 
+function tray.getwidth(self)
+  local function getW(widget)
+    local w,_ = widget:fit(1000000, 0)
+    return w
+  end
+
+  for k,v in ipairs(self.widgets) do
+    print(k)
+    print(v)
+  end
+end
+
+function tray:add(widget)
+  table.insert(self.widgets, widget)
+end
+
 function tray.new(s,layout, geometry)
   local scrgeom = screen[s].workarea
 
@@ -34,10 +50,11 @@ function tray.new(s,layout, geometry)
   if(geometry.visible ~= nil) then
     wb.visible = geometry.visible
   else
-    wb.visible = true
+    wb.visible = false
   end
 
   return {
+    widgets = {},
     screen = s,
     wibox = wb,
     toggle = toggle

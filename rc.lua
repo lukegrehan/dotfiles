@@ -127,6 +127,8 @@ promptbox = {}
 for s = 1, screen.count() do
     promptbox[s] = awful.widget.prompt()
 
+    print("-----")
+
     local statusLayout = wibox.layout.fixed.horizontal()
       statusLayout:add(batterywidget)
       statusLayout:add(tagsWidget)
@@ -137,16 +139,13 @@ for s = 1, screen.count() do
         x=(1600/2)-(200/2),
         y=(900/2),
         width=200,
-        visible=false
     })
 
     statusTray[s] = trayer.new(s,statusLayout, {
       x = (1600-270),
       y=5,
-      width=265
+      width=265,
     })
-
-    statusTray[s]:toggle()
 end
 -- }}}
 
