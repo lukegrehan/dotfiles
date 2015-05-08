@@ -129,23 +129,26 @@ for s = 1, screen.count() do
 
     print("-----")
 
-    local statusLayout = wibox.layout.fixed.horizontal()
-      statusLayout:add(batterywidget)
-      statusLayout:add(tagsWidget)
-      statusLayout:add(awful.widget.textclock("%a %b %d, %H:%M "))
-      statusLayout:add(awful.widget.layoutbox(s))
-
-    promptTray[s] = trayer.new(s,promptbox[s], {
+    promptTray[s] = trayer.new(s,{
         x=(1600/2)-(200/2),
         y=(900/2),
         width=200,
     })
+    promptTray[s]:add(promptbox[s])
 
-    statusTray[s] = trayer.new(s,statusLayout, {
-      x = (1600-270),
-      y=5,
-      width=265,
+    statusTray[s] = trayer.new(s,{
+      --x = (1600-270),
+      x=0,
+      y=5
+     -- ,
+      --width=265,
     })
+
+    statusTray[s]:add(batterywidget)
+    statusTray[s]:add(tagsWidget)
+    statusTray[s]:add(awful.widget.textclock("%a %b %d, %H:%M "))
+    statusTray[s]:add(awful.widget.layoutbox(s))
+
 end
 -- }}}
 
