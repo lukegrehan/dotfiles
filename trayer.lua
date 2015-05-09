@@ -14,67 +14,60 @@ local tray = {}
 
 function getwidth(self)
   local function getW(widget)
-    local w,_ = widget:fit(1000000, 0)
+    local w,_ = widget:fit(1000, self.geom.height)
     return w
   end
 
-  --for _,v in ipairs(self.widgets) do
---    print(getW(v))
---  end
-
-  return 200
-end
-
-function getheight(self)
-  local function getH(widget)
-    local _,h = widget:fit(1000000, 0)
-    return h
+  local w = 0
+  for _,v in ipairs(self.widgets) do
+    w = w + getW(v)
   end
 
---  for k,v in ipairs(self.widgets) do
- --   print(k)
---    print(v)
- -- end
-
-  return 20
+  return w
 end
 
 function add(self, widget)
   table.insert(self.widgets, widget)
   self.layout:add(widget)
+  self.wibox:set_widget(self.layout)
   self:update()
 end
 
 function update(self)
-  self.geom.width = self:getwidth()
-  self.geom.height = self:getheight()
-
+  local width = self:getwidth()
+  self.geom.width = width
+  self.geom.x = self.geom.basex - width
   self.wibox:geometry(self.geom)
 end
 
 function tray.new(s, geometry)
+  geometry = geometry or {}
   local scrgeom = screen[s].workarea
+  local basex = geometry.x or (scrgeom.width - scrgeom.x - 6)
   local geom = {
-    x = geometry.x or (scrgeom.width - scrgeom.x),
-    y = geometry.y or scrgeom.y
+    basex = basex,
+    x = basex,
+    y = geometry.y or (scrgeom.y + 5),
+    height = geometry.height or 20
   }
 
-  if(geometry.ontop ~= nil) then
-    geom.ontop = geometry.ontop
-  else
-    geom.ontop = true
-  end
-
-  if(geometry.visible ~= nil) then
-    geom.visible = geometry.visible
-  else
-    geom.visible = true
+  if (geometry.width ~= nil) then
+    -- given a fixed width
+    geom.width = geometry.width
+    local update = function() end --never update width
   end
 
   local layout = wibox.layout.fixed.horizontal()
   local wb = wibox({})
-  wb:set_widget(layout)
-  wb:geometry(geom)
+    wb:set_widget(layout)
+    wb:geometry(geom)
+    wb.ontop = true
+
+  if(geometry.visible ~= nil) then
+    wb.visible = geometry.visible
+  else
+    wb.visible = false
+  end
 
   return {
     widgets = {},

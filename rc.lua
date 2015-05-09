@@ -127,8 +127,6 @@ promptbox = {}
 for s = 1, screen.count() do
     promptbox[s] = awful.widget.prompt()
 
-    print("-----")
-
     promptTray[s] = trayer.new(s,{
         x=(1600/2)-(200/2),
         y=(900/2),
@@ -136,19 +134,12 @@ for s = 1, screen.count() do
     })
     promptTray[s]:add(promptbox[s])
 
-    statusTray[s] = trayer.new(s,{
-      --x = (1600-270),
-      x=0,
-      y=5
-     -- ,
-      --width=265,
-    })
-
-    statusTray[s]:add(batterywidget)
-    statusTray[s]:add(tagsWidget)
-    statusTray[s]:add(awful.widget.textclock("%a %b %d, %H:%M "))
-    statusTray[s]:add(awful.widget.layoutbox(s))
-
+    local st = trayer.new(s)
+      st:add(batterywidget)
+      st:add(tagsWidget)
+      st:add(awful.widget.textclock("%a %b %d, %H:%M "))
+      st:add(awful.widget.layoutbox(s))
+    statusTray[s] = st
 end
 -- }}}
 
