@@ -53,20 +53,25 @@ end
 tags = {}
 tagsWidget = wibox.widget.textbox("|")
 function setStats(screen)
-  local sel = {}
-  local unSel = {}
+  local text = {}
+  local prev = nil
+
+
   for _, t in ipairs(awful.tag.gettags(screen)) do
     if(#t:clients() > 0) then
       if t.selected then
-        table.insert(sel,t.name)
+        table.insert(prev, t.name)
       else 
-        table.insert(unSel,t.name)
+        if prev ~= nil then
+          table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+          prev = nil
+        end
+        table.insert(text, t.name)
       end
     end
   end
-
-  local text = "["..table.concat(sel, ",").."] "..table.concat(unSel, ",").." | "
-  tagsWidget:set_text(text)
+  
+  tagsWidget:set_text(table.concat(text, ","))
 end
 
 for s = 1, screen.count() do
