@@ -6,17 +6,13 @@ local naughty = require("naughty")
 local tray = {_mt = {}}
 
 function getwidth(self)
-  local function getW(widget)
-    local w,_ = widget:fit(1000, self.geom.height)
-    return w
-  end
-
-  local w = 0
+  local total = 0
   for _,v in ipairs(self.layout.widgets) do
-    w = w + getW(v)
+    local w,_ = v:fit(1000, self.geom.height)
+    total = total + w
   end
 
-  return w
+  return total
 end
 
 function add(self, widget)
