@@ -4,9 +4,6 @@ local naughty = require("naughty")
 
 function toggle(self)
   self.wibox.visible  = not self.wibox.visible
-  if self.wibox.visible then
-    self:update()
-  end
 end
 
 -- Module tray
@@ -30,14 +27,6 @@ function add(self, widget)
   table.insert(self.widgets, widget)
   self.layout:add(widget)
   self.wibox:set_widget(self.layout)
-  self:update()
-end
-
-function update(self)
-  local width = self:getwidth()
-  self.geom.width = width
-  self.geom.x = self.geom.basex - width
-  self.wibox:geometry(self.geom)
 end
 
 function tray.new(s, geometry)
@@ -69,7 +58,7 @@ function tray.new(s, geometry)
     wb.visible = false
   end
 
-  return {
+  local self = {
     widgets = {},
     layout = layout,
     geom = geom,
@@ -81,6 +70,15 @@ function tray.new(s, geometry)
     add = add,
     update = update
   }
+
+  layout:connect_signal("widget::updated", function()
+    local width = self:getwidth()
+    self.geom.width = width
+    self.geom.x = self.geom.basex - width
+    self.wibox:geometry(self.geom)
+  end)
+
+  return self
 end
 
 return tray
