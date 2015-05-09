@@ -2,12 +2,8 @@ local wibox = require("wibox")
 local awful = require("awful")
 local naughty = require("naughty")
 
-function toggle(self)
-  self.wibox.visible  = not self.wibox.visible
-end
-
 -- Module tray
-local tray = {}
+local tray = {_mt = {}}
 
 function getwidth(self)
   local function getW(widget)
@@ -16,7 +12,7 @@ function getwidth(self)
   end
 
   local w = 0
-  for _,v in ipairs(self.widgets) do
+  for _,v in ipairs(self.layout.widgets) do
     w = w + getW(v)
   end
 
@@ -24,7 +20,6 @@ function getwidth(self)
 end
 
 function add(self, widget)
-  table.insert(self.widgets, widget)
   self.layout:add(widget)
   self.wibox:set_widget(self.layout)
 end
@@ -40,10 +35,11 @@ function tray.new(s, geometry)
     height = geometry.height or 20
   }
 
+  local doUpdate = true
   if (geometry.width ~= nil) then
     -- given a fixed width
     geom.width = geometry.width
-    local update = function() end --never update width
+    doUpdate = false
   end
 
   local layout = wibox.layout.fixed.horizontal()
@@ -59,27 +55,29 @@ function tray.new(s, geometry)
   end
 
   local self = {
-    widgets = {},
     layout = layout,
     geom = geom,
     screen = s,
     wibox = wb,
-    toggle = toggle,
-    getwidth = getwidth,
-    getheight = getheight,
+    toggle = function (self) self.wibox.visible  = not self.wibox.visible end,
     add = add,
-    update = update
   }
 
   layout:connect_signal("widget::updated", function()
-    local width = self:getwidth()
-    self.geom.width = width
-    self.geom.x = self.geom.basex - width
-    self.wibox:geometry(self.geom)
+    if doUpdate then
+      local width = getwidth(self)
+      self.geom.width = width
+      self.geom.x = self.geom.basex - width
+      self.wibox:geometry(self.geom)
+    end
   end)
 
   return self
 end
 
-return tray
+function tray._mt:__call(...)
+  return tray.new(...)
+end
+
+return setmetatable(tray, tray._mt)
 
