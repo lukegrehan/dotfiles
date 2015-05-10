@@ -11,7 +11,6 @@ local trayer      = require("trayer")
 require("awful.autofocus")
 require("eminent")
 
-
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
@@ -51,16 +50,21 @@ end
 
 -- {{{ Tags
 tags = {}
-tagsWidget = wibox.widget.textbox("|")
+tagsWidget = wibox.widget.textbox()
+tagsWidget:set_text("|")
+print("---")
 function setStats(screen)
   local text = {}
   local prev = nil
 
-
   for _, t in ipairs(awful.tag.gettags(screen)) do
     if(#t:clients() > 0) then
       if t.selected then
-        table.insert(prev, t.name)
+        if prev ~= nil then
+          table.insert(prev, t.name)
+        else
+          prev = {t.name}
+        end
       else 
         if prev ~= nil then
           table.insert(text, "[" .. table.concat(prev, ",") .. "]")
@@ -70,8 +74,14 @@ function setStats(screen)
       end
     end
   end
-  
-  tagsWidget:set_text(table.concat(text, ","))
+
+  if prev ~= nil then
+    table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+    prev = nil
+  end
+
+  text = table.concat(text, ",") .. " | "
+  tagsWidget:set_text(text)
 end
 
 for s = 1, screen.count() do
