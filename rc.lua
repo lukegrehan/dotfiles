@@ -12,17 +12,12 @@ require("awful.autofocus")
 require("eminent")
 
 -- {{{ Variable definitions
--- Themes define colours, icons, and wallpapers
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
--- This is used later as the default terminal and editor to run.
 terminal = "xterm"
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
 modkey = "Mod4"
 numTags = 10
 
--- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
     --awful.layout.suit.floating,
@@ -33,7 +28,7 @@ local layouts =
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.top,
     awful.layout.suit.spiral,
-    --awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
@@ -126,7 +121,6 @@ batterytimer:connect_signal("timeout",
   end
 )
 batterytimer:start()
-
 -- }}}
 
 -- {{{ Wibox
@@ -228,7 +222,6 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey, "Shift" },            "r",     function () promptbox[mouse.screen]:run() end,"Run program"),
     awful.key({ modkey },            "r",     function ()
       local screen = mouse.screen
       local promptCont = promptTray[screen]
@@ -272,16 +265,8 @@ globalkeys = awful.util.table.join(
     awful.key({ "Control", "Mod1" }, "l", function()
       awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
 
-    awful.key({ modkey }, "F1", keydoc.display, "Show help")
-    ,awful.key({ modkey, "Shift"   }, "n",
-        function()
-            local tag = awful.tag.selected()
-            for i=1, #tag:clients() do
-              tag:clients()[i].minimized=false
-            end
-        end,"Unminimise all")
-
-    ,awful.key({ modkey }, "s",
+    awful.key({ modkey }, "F1", keydoc.display, "Show help"),
+    awful.key({ modkey }, "s",
       function()
         local toggleTray = function() statusTray[mouse.screen]:toggle() end
         local hideTimer = timer({timeout=6})
@@ -294,8 +279,7 @@ globalkeys = awful.util.table.join(
         toggleTray()
         hideTimer:start()
 
-      end, "Show status bar"
-    )
+      end, "Show status bar")
 )
 
 clientkeys = awful.util.table.join(
@@ -306,12 +290,6 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,"Swap client with master"),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ,"Move to screen"),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,"Set ontop"),
-    awful.key({ modkey,           }, "n",
-        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            c.minimized = true
-        end),
     awful.key({ modkey,           }, "m",
         function (c)
             c.maximized_horizontal = not c.maximized_horizontal
