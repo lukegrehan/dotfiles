@@ -55,29 +55,24 @@ tagsWidget:set_text("|")
 print("---")
 function setStats(screen)
   local text = {}
-  local prev = nil
+  local prev = {}
 
   for _, t in ipairs(awful.tag.gettags(screen)) do
     if(#t:clients() > 0) then
       if t.selected then
-        if prev ~= nil then
-          table.insert(prev, t.name)
-        else
-          prev = {t.name}
-        end
+        table.insert(prev, t.name)
       else 
-        if prev ~= nil then
+        if next(prev) ~= nil then
           table.insert(text, "[" .. table.concat(prev, ",") .. "]")
-          prev = nil
+          prev = {}
         end
         table.insert(text, t.name)
       end
     end
   end
 
-  if prev ~= nil then
+  if next(prev) ~= nil then
     table.insert(text, "[" .. table.concat(prev, ",") .. "]")
-    prev = nil
   end
 
   text = table.concat(text, ",") .. " | "
