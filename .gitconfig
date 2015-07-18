@@ -1,0 +1,11 @@
+[alias]
+	l = log --graph --pretty=oneline --abbrev-commit
+	st = status -sb
+    unstage = reset HEAD -- 
+[user]
+	email = luketenant@gmail.com
+	name = Luke Grehan
+[push]
+	default = simple
+[core]
+	editor = vi
