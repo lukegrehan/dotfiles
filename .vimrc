@@ -2,6 +2,7 @@ set nocompatible
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-easy-align'
+Plug 'keith/swift.vim'
 call plug#end()
 
 set number         "Absolute line number on current line
