@@ -14,7 +14,7 @@ require("eminent")
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
-terminal = "xterm"
+terminal = "urxvt"
 modkey = "Mod4"
 numTags = 10
 
