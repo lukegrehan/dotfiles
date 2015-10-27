@@ -2,7 +2,10 @@ set nocompatible
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-easy-align'
-Plug 'keith/swift.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-commentary'
 call plug#end()
 
 set number         "Absolute line number on current line
@@ -23,6 +26,9 @@ set shiftwidth=2   "spaces/<<<>
 set expandtab      "Tabs are spaces
 set cursorline     "Highlight current line
 set wildmenu       "Visual autocomplete for command menu
+set gdefault       "Global replace by default
+
+set foldmethod=indent "Fold based on indentation
 
 filetype plugin indent on "proper indents depending on file type
 
@@ -40,8 +46,14 @@ set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 set autoread
 
+"Save on focuslost
+"au FocusLost * :wa
+
 "keys to wrap lines on
 set whichwrap+=<,>,h,l,[,]
 
-vmap a <Plug>(LiveEasyAlign)
-nmap ga <Plug>(LiveEasyAlign)
+"Unhighlight searches
+nnoremap <leader><space> :noh<cr>
+
+"Shift is for the weak
+nnoremap ; :
