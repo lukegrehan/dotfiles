@@ -15,6 +15,7 @@ require("eminent")
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
 terminal = "urxvt"
+browser = "chromium"
 modkey = "Mod4"
 numTags = 10
 
@@ -222,26 +223,7 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey },            "r",     function ()
-      local screen = mouse.screen
-      local promptCont = promptTray[screen]
-      promptCont:toggle()
-
-      awful.prompt.run({prompt = "Run: "},
-                promptbox[screen].widget,
-                function (...)
-                          local result = awful.util.spawn(...)
-                          if type(result) == "string" then
-                              promptbox.widget:set_text(result)
-                          end
-                      end,
-                awful.completion.shell,
-                awful.util.getdir("cache") .. "/history",
-                nil,
-                function() promptCont:toggle() end
-      )
-    end,"Run program"),
-
+    awful.key({ modkey }, "r", function () awful.util.spawn(browser) end, "Run browser"),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("amixer set Master 5%+",false) end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
