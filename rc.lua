@@ -48,7 +48,6 @@ end
 tags = {}
 tagsWidget = wibox.widget.textbox()
 tagsWidget:set_text("|")
-print("---")
 function setStats(screen)
   local text = {}
   local prev = {}
@@ -57,7 +56,7 @@ function setStats(screen)
     if(#t:clients() > 0) then
       if t.selected then
         table.insert(prev, t.name)
-      else 
+      else
         if next(prev) ~= nil then
           table.insert(text, "[" .. table.concat(prev, ",") .. "]")
           prev = {}
@@ -90,7 +89,7 @@ for s = 1, screen.count() do
     for _, prop in ipairs({ "property::selected", "property::name",
       "property::activated", "property::screen", "property::index" }) do
       awful.tag.attached_connect_signal(s, prop, u)
-    end  
+    end
 end
 
 -- }}}
