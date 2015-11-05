@@ -14,7 +14,8 @@ require("eminent")
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
-terminal = "xterm"
+terminal = "urxvt"
+browser = "chromium"
 modkey = "Mod4"
 numTags = 10
 
@@ -47,7 +48,6 @@ end
 tags = {}
 tagsWidget = wibox.widget.textbox()
 tagsWidget:set_text("|")
-print("---")
 function setStats(screen)
   local text = {}
   local prev = {}
@@ -56,7 +56,7 @@ function setStats(screen)
     if(#t:clients() > 0) then
       if t.selected then
         table.insert(prev, t.name)
-      else 
+      else
         if next(prev) ~= nil then
           table.insert(text, "[" .. table.concat(prev, ",") .. "]")
           prev = {}
@@ -89,7 +89,7 @@ for s = 1, screen.count() do
     for _, prop in ipairs({ "property::selected", "property::name",
       "property::activated", "property::screen", "property::index" }) do
       awful.tag.attached_connect_signal(s, prop, u)
-    end  
+    end
 end
 
 -- }}}
@@ -222,26 +222,7 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey },            "r",     function ()
-      local screen = mouse.screen
-      local promptCont = promptTray[screen]
-      promptCont:toggle()
-
-      awful.prompt.run({prompt = "Run: "},
-                promptbox[screen].widget,
-                function (...)
-                          local result = awful.util.spawn(...)
-                          if type(result) == "string" then
-                              promptbox.widget:set_text(result)
-                          end
-                      end,
-                awful.completion.shell,
-                awful.util.getdir("cache") .. "/history",
-                nil,
-                function() promptCont:toggle() end
-      )
-    end,"Run program"),
-
+    awful.key({ modkey }, "r", function () awful.util.spawn(browser) end, "Run browser"),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("amixer set Master 5%+",false) end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
