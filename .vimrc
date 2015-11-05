@@ -1,7 +1,7 @@
 set nocompatible
 
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/vim-easy-align'
+Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
