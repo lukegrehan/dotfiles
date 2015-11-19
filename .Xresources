@@ -1,0 +1,6 @@
+URxvt*font: xft:Tamsyn:size=10:antialias=true, xft:Terminus:size=10, xft:symbola:size=10
+URxvt*scrollBar: false
+URxvt*foreground: rgb:a8/a8/a8
+URxvt*background: rgb:00/00/00
+URxvt*color12: rgb:5c/5c/ff
+URxvt*fading:  50
