@@ -28,9 +28,6 @@ set cursorline     "Highlight current line
 set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
 
-set foldmethod=indent "Fold based on indentation
-set foldlevelstart=20
-
 filetype plugin indent on "proper indents depending on file type
 
 set ruler
@@ -45,16 +42,9 @@ set backspace=indent,eol,start " make backspace behave in a sane manner
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
-set autoread
-
-"Save on focuslost
-au FocusLost * :wa
 
 "keys to wrap lines on
 set whichwrap+=<,>,h,l,[,]
 
 "Unhighlight searches
 nnoremap <leader><space> :noh<cr>
-
-"Shift is for the weak
-nnoremap ; :
