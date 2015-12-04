@@ -16,3 +16,5 @@ alias unMntPhone='cd && fusermount -u ~/Phone && rmdir ~/Phone'
 alias tmux='tmux -2'
 alias v='vim'
 alias ytdl='youtube-dl --extract-audio --audio-format mp3'
+alias tt='mupdf ~/Schoolwork/timetable.pdf'
+
