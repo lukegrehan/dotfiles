@@ -6,6 +6,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+Plug 'chrisbra/unicode.vim'
 call plug#end()
 
 set number         "Absolute line number on current line
