@@ -96,7 +96,7 @@ end
 
 -- {{{ Battery Warning
 battery_val = "???"
-battery_warn_parcent = 5
+battery_warn_parcent = 15
 battery_warned = false
 
 batterywidget = wibox.widget.textbox()
