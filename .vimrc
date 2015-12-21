@@ -28,6 +28,7 @@ set expandtab      "Tabs are spaces
 set cursorline     "Highlight current line
 set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
+set confirm        "Confirm save on exit
 
 filetype plugin indent on "proper indents depending on file type
 
