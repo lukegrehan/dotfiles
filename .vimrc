@@ -29,6 +29,7 @@ set cursorline     "Highlight current line
 set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
 set confirm        "Confirm save on exit
+set synmaxcol=128  "Stop syntax highlighting past 128 cols to... make go fast now
 
 filetype plugin indent on "proper indents depending on file type
 
@@ -50,3 +51,4 @@ set whichwrap+=<,>,h,l,[,]
 
 "Unhighlight searches
 nnoremap <leader><space> :noh<cr>
+
