@@ -22,7 +22,7 @@ shopt -s checkjobs
 GIT_PS1_SHOWCOLORHINTS=true
 export EDITOR=vim
 
-PS1='[$(if [[ $? == 0 ]]; then echo "\[$Green\]"; else echo "\[$Red\]($?) "; fi)\w\[$Yellow\]$(__git_ps1)\[$NC\]] \$ '
+PS1='[$(t=$?;if [[ $t == 0 ]]; then echo "\[$Green\]"; else echo "\[$Red\]($t) "; fi)\w\[$Yellow\]$(__git_ps1)\[$NC\]] \$ '
 
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
