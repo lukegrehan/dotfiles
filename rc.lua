@@ -223,6 +223,7 @@ globalkeys = awful.util.table.join(
    -- Prompt
     keydoc.group("Misc"),
     awful.key({ modkey }, "r", function () awful.util.spawn(browser) end, "Run browser"),
+    awful.key({ modkey }, "p", function () awful.util.spawn("passmenu") end, "Run passmenu"),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("amixer set Master 5%+",false) end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
