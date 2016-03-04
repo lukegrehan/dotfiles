@@ -5,6 +5,8 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 HISTIGNORE="history:l"
 
+PROMPT_DIRTRIM=3
+
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
