@@ -7,6 +7,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'chrisbra/unicode.vim'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'terryma/vim-multiple-cursors'
 call plug#end()
 
 set number         "Absolute line number on current line
