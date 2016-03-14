@@ -48,30 +48,39 @@ end
 tags = {}
 tagsWidget = wibox.widget.textbox()
 tagsWidget:set_text("|")
-function setStats(screen)
-  local text = {}
-  local prev = {}
+function setStats()
+  local screens = {}
+  for s = 1, screen.count() do
+    local text = {}
+    local prev = {}
 
-  for _, t in ipairs(awful.tag.gettags(screen)) do
-    if(#t:clients() > 0) then
-      if t.selected then
-        table.insert(prev, t.name)
-      else
-        if next(prev) ~= nil then
-          table.insert(text, "[" .. table.concat(prev, ",") .. "]")
-          prev = {}
+    for _, t in ipairs(awful.tag.gettags(s)) do
+      if(#t:clients() > 0) then
+        if t.selected then
+          table.insert(prev, t.name)
+        else
+          if next(prev) ~= nil then
+            table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+            prev = {}
+          end
+          table.insert(text, t.name)
         end
-        table.insert(text, t.name)
       end
     end
+
+    if next(prev) ~= nil then
+      table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+    end
+
+    text = table.concat(text, ",")
+    table.insert(screens, text)
   end
 
-  if next(prev) ~= nil then
-    table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+  local res = "<"..table.concat(screens, "> <").."> | "
+  if #screens == 1 then
+    res = res:sub(2, -5) .. " | "
   end
-
-  text = table.concat(text, ",") .. " | "
-  tagsWidget:set_text(text)
+  tagsWidget:set_text(res)
 end
 
 for s = 1, screen.count() do
@@ -79,16 +88,14 @@ for s = 1, screen.count() do
     for i = 1, numTags do thisTags[i] = i end
     tags[s] = awful.tag(thisTags, s, layouts[1])
 
-    local u = function () setStats(s) end
-
-    client.connect_signal("focus", u)
-    client.connect_signal("unfocus", u)
-    client.connect_signal("tagged", u)
-    client.connect_signal("untagged", u)
+    client.connect_signal("focus", setStats)
+    client.connect_signal("unfocus", setStats)
+    client.connect_signal("tagged", setStats)
+    client.connect_signal("untagged", setStats)
 
     for _, prop in ipairs({ "property::selected", "property::name",
       "property::activated", "property::screen", "property::index" }) do
-      awful.tag.attached_connect_signal(s, prop, u)
+      awful.tag.attached_connect_signal(s, prop, setStats)
     end
 end
 
