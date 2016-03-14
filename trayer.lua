@@ -56,6 +56,8 @@ function tray.new(s, geometry)
     screen = s,
     wibox = wb,
     toggle = function (self) self.wibox.visible  = not self.wibox.visible end,
+    on = function (self) self.wibox.visible = true end,
+    off = function (self) self.wibox.visible = false end,
     add = add,
   }
 

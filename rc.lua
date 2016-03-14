@@ -246,15 +246,16 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "F1", keydoc.display, "Show help"),
     awful.key({ modkey }, "s",
       function()
-        local toggleTray = function() statusTray[mouse.screen]:toggle() end
+        local st = statusTray[mouse.screen]
+
         local hideTimer = timer({timeout=6})
         hideTimer:connect_signal("timeout",
           function()
-            toggleTray()
+            st:off()
             hideTimer:stop()
           end)
 
-        toggleTray()
+        st:on()
         hideTimer:start()
 
       end, "Show status bar")
