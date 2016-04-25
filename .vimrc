@@ -1,5 +1,7 @@
 set nocompatible
 
+colorscheme monokai
+
 call plug#begin('~/.vim/plugged')
 Plug 'godlygeek/tabular'
 Plug 'ntpeters/vim-better-whitespace'
@@ -36,10 +38,8 @@ set synmaxcol=128  "Stop syntax highlighting past 128 cols to... make go fast no
 filetype plugin indent on "proper indents depending on file type
 
 set ruler
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%81v', 100) "Set a grey ruler at 80 chars       >
+call matchadd('ColorColumn', '\%81v', 300) "Set a grey ruler at 80 chars       >
 
-colorscheme monokai
 syntax enable
 set so=998 "set scroll off so cursor is always as near as possible to centered
 set backspace=indent,eol,start " make backspace behave in a sane manner
