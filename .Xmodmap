@@ -1,0 +1,5 @@
+remove Lock = Caps_Lock
+add Lock = Escape
+keysym Tab = Escape
+keysym Caps_Lock = Tab
+keysym Escape = Caps_Lock
