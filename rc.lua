@@ -141,6 +141,21 @@ for s = 1, screen.count() do
       st:add(awful.widget.layoutbox(s))
     statusTray[s] = st
 end
+
+function showTray()
+  local st = statusTray[mouse.screen]
+
+  local hideTimer = timer({timeout=6})
+  hideTimer:connect_signal("timeout",
+    function()
+      st:off()
+      hideTimer:stop()
+    end)
+
+  st:on()
+  hideTimer:start()
+end
+
 -- }}}
 
 -- {{{ Key bindings
@@ -244,21 +259,7 @@ globalkeys = awful.util.table.join(
       awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
 
     awful.key({ modkey }, "F1", keydoc.display, "Show help"),
-    awful.key({ modkey }, "s",
-      function()
-        local st = statusTray[mouse.screen]
-
-        local hideTimer = timer({timeout=6})
-        hideTimer:connect_signal("timeout",
-          function()
-            st:off()
-            hideTimer:stop()
-          end)
-
-        st:on()
-        hideTimer:start()
-
-      end, "Show status bar")
+    awful.key({ modkey }, "s", showTray, "Show status bar")
 )
 
 clientkeys = awful.util.table.join(
@@ -375,4 +376,9 @@ client.connect_signal("property::urgent", function(c)
     naughty.notify({text="URGENT: "..c.class}) 
   end
 end)
+
+tag.connect_signal("property::selected", function(t)
+  showTray()
+end)
+
 -- }}}
