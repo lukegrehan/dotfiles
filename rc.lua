@@ -264,21 +264,13 @@ globalkeys = awful.util.table.join(
 
 clientkeys = awful.util.table.join(
     keydoc.group("Client keys"),
-    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end,"Set client fullscreen"),
     awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,"Close window"),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,"Toggle floating"),
+    awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle        ,"Toggle floating"),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,"Swap client with master"),
-    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ,"Move to screen"),
+    awful.key({ modkey,           }, "o",                   awful.client.movetoscreen           ,"Move to screen"),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,"Set ontop"),
-    awful.key({ modkey,           }, "m",
-        function (c)
-            c.maximized_horizontal = not c.maximized_horizontal
-            c.maximized_vertical   = not c.maximized_vertical
-        end,"Minimise client"),
-    awful.key({ modkey, "Shift"   }, "s",
-        function (c)
-            c.sticky = not c.sticky
-        end,"Set client sticky")
+    awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen  end,"Maximize client"),
+    awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky          end,"Set client sticky")
 )
 
 -- Bind all key numbers to tags.
