@@ -3,14 +3,11 @@ set nocompatible
 colorscheme monokai
 
 call plug#begin('~/.vim/plugged')
-Plug 'godlygeek/tabular'
-Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
-Plug 'chrisbra/unicode.vim'
+Plug 'ntpeters/vim-better-whitespace'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'terryma/vim-multiple-cursors'
 call plug#end()
 
 set number         "Absolute line number on current line
