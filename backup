@@ -1,4 +1,4 @@
 #!/bin/bash
-notify-send "running backup"
+notify-send -i /home/luke/.icons/backupIco.png "running backup"
 date >> /home/luke/.backuplog
 rdiff-backup --exclude '/home/luke/Dropbox/' --exclude '/home/luke/Pi/' --exclude '/home/luke/Downloads/' --exclude '/home/luke/.*'  /home/luke/ luke@lukegrehan.com::/home/luke/Backups
