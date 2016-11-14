@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar ~/Stuff/Minecraft.jar &
+java -jar ~/Stuff/games/Minecraft.jar &
