@@ -19,6 +19,7 @@ browser = "chromium"
 modkey = "Mod4"
 numTags = 10
 
+-- TODO: awful.layout.layouts
 local layouts =
 {
     awful.layout.suit.fair,
@@ -37,126 +38,148 @@ local layouts =
 -- }}}
 
 -- {{{ Wallpaper
-if beautiful.wallpaper then
-    for s = 1, screen.count() do
-        gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+-- if beautiful.wallpaper then
+--     for s = 1, screen.count() do
+--         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+--     end
+-- end
+
+local function set_wallpaper(s)
+  if beautiful.wallpaper then
+    local wallpaper = beautiful.wallpaper
+    if type(wallpaper) == "function" then
+      wallpaper = wallpaper(s)
     end
+    gears.wallpaper.maximized(wallpaper, s, true)
+  end
 end
+screen.connect_signal("property::geometry", set_wallpaper)
+
 -- }}}
 
 -- {{{ Tags
-tags = {}
-tagsWidget = wibox.widget.textbox()
-tagsWidget:set_text("|")
-function setStats()
-  local screens = {}
-  for s = 1, screen.count() do
-    local text = {}
-    local prev = {}
+-- tags = {}
+-- tagsWidget = wibox.widget.textbox()
+-- tagsWidget:set_text("|")
+-- function setStats()
+--   local screens = {}
+--   for s = 1, screen.count() do
+--     local text = {}
+--     local prev = {}
 
-    for _, t in ipairs(awful.tag.gettags(s)) do
-      if(#t:clients() > 0) then
-        if t.selected then
-          table.insert(prev, t.name)
-        else
-          if next(prev) ~= nil then
-            table.insert(text, "[" .. table.concat(prev, ",") .. "]")
-            prev = {}
-          end
-          table.insert(text, t.name)
-        end
-      end
-    end
+--     for _, t in ipairs(awful.tag.gettags(s)) do
+--       if(#t:clients() > 0) then
+--         if t.selected then
+--           table.insert(prev, t.name)
+--         else
+--           if next(prev) ~= nil then
+--             table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+--             prev = {}
+--           end
+--           table.insert(text, t.name)
+--         end
+--       end
+--     end
 
-    if next(prev) ~= nil then
-      table.insert(text, "[" .. table.concat(prev, ",") .. "]")
-    end
+--     if next(prev) ~= nil then
+--       table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+--     end
 
-    text = table.concat(text, ",")
-    table.insert(screens, text)
-  end
+--     text = table.concat(text, ",")
+--     table.insert(screens, text)
+--   end
 
-  local res = "<"..table.concat(screens, "> <").."> | "
-  if #screens == 1 then
-    res = res:sub(2, -5) .. " | "
-  end
-  tagsWidget:set_text(res)
-end
+--   local res = "<"..table.concat(screens, "> <").."> | "
+--   if #screens == 1 then
+--     res = res:sub(2, -5) .. " | "
+--   end
+--   tagsWidget:set_text(res)
+-- end
 
-for s = 1, screen.count() do
-    local thisTags = {}
-    for i = 1, numTags do thisTags[i] = i end
-    tags[s] = awful.tag(thisTags, s, layouts[1])
+-- for s = 1, screen.count() do
+--     local thisTags = {}
+--     for i = 1, numTags do thisTags[i] = i end
+--     tags[s] = awful.tag(thisTags, s, layouts[1])
 
-    client.connect_signal("focus", setStats)
-    client.connect_signal("unfocus", setStats)
-    client.connect_signal("tagged", setStats)
-    client.connect_signal("untagged", setStats)
+--     client.connect_signal("focus", setStats)
+--     client.connect_signal("unfocus", setStats)
+--     client.connect_signal("tagged", setStats)
+--     client.connect_signal("untagged", setStats)
 
-    for _, prop in ipairs({ "property::selected", "property::name",
-      "property::activated", "property::screen", "property::index" }) do
-      awful.tag.attached_connect_signal(s, prop, setStats)
-    end
-end
+--     for _, prop in ipairs({ "property::selected", "property::name",
+--       "property::activated", "property::screen", "property::index" }) do
+--       awful.tag.attached_connect_signal(s, prop, setStats)
+--     end
+-- end
 
--- }}}
+-- -- }}}
 
--- {{{ Battery Warning
-battery_val = "???"
-battery_warn_parcent = 15
-battery_warned = false
+-- -- {{{ Battery Warning
+-- battery_val = "???"
+-- battery_warn_parcent = 15
+-- battery_warned = false
 
-batterywidget = wibox.widget.textbox()
-batterywidget:set_text(" ???% | ")
+-- batterywidget = wibox.widget.textbox()
+-- batterywidget:set_text(" ???% | ")
 
-batterytimer = timer({ timeout = 15 })
-batterytimer:connect_signal("timeout",
-  function()
-    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
-    text = fh:read("*l")
-    fh:close()
-    batterywidget:set_text(" " .. text .. "% | ")
+-- batterytimer = timer({ timeout = 15 })
+-- batterytimer:connect_signal("timeout",
+--   function()
+--     fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
+--     text = fh:read("*l")
+--     fh:close()
+--     batterywidget:set_text(" " .. text .. "% | ")
 
-    battery_val = tonumber(text)
-    if (battery_val>battery_warn_parcent) then
-      battery_warned = false
-    elseif(battery_val<battery_warn_parcent and not battery_warned) then
-      battery_warned = true
-      naughty.notify({ preset = naughty.config.presets.critical,
-                    title = "low battery"})
-    end
-  end
-)
-batterytimer:start()
--- }}}
+--     battery_val = tonumber(text)
+--     if (battery_val>battery_warn_parcent) then
+--       battery_warned = false
+--     elseif(battery_val<battery_warn_parcent and not battery_warned) then
+--       battery_warned = true
+--       naughty.notify({ preset = naughty.config.presets.critical,
+--                     title = "low battery"})
+--     end
+--   end
+-- )
+-- batterytimer:start()
+-- -- }}}
 
--- {{{ Wibox
-statusTray = {}
+-- -- {{{ Wibox
+-- statusTray = {}
 
-for s = 1, screen.count() do
-    local st = trayer(s)
-      st:add(batterywidget)
-      st:add(tagsWidget)
-      st:add(awful.widget.textclock("%a %b %d, %H:%M "))
-      st:add(awful.widget.layoutbox(s))
-    statusTray[s] = st
-end
+-- for s = 1, screen.count() do
+--     local st = trayer(s)
+--       st:add(batterywidget)
+--       st:add(tagsWidget)
+--       st:add(awful.widget.textclock("%a %b %d, %H:%M "))
+--       st:add(awful.widget.layoutbox(s))
+--     statusTray[s] = st
+-- end
 
-function showTray()
-  local st = statusTray[mouse.screen]
+-- function showTray()
+--   local st = statusTray[mouse.screen]
 
-  local hideTimer = timer({timeout=6})
-  hideTimer:connect_signal("timeout",
-    function()
-      st:off()
-      hideTimer:stop()
-    end)
+--   local hideTimer = timer({timeout=6})
+--   hideTimer:connect_signal("timeout",
+--     function()
+--       st:off()
+--       hideTimer:stop()
+--     end)
 
-  st:on()
-  hideTimer:start()
-end
+--   st:on()
+--   hideTimer:start()
+-- end
 
--- }}}
+-- -- }}}
+
+awful.screen.connect_for_each_screen(function(s)
+  set_wallpaper(s)
+
+  local numtags = 9
+  local thisTags = {}
+  for i = 1,numtags do thisTags[i] = i end
+  awful.tag(thisTags, s, layouts[1])
+end)
+
 
 -- {{{ Key bindings
 local oldSelected = {}
@@ -210,7 +233,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     keydoc.group("Misc"),
-    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end,"Spawn terminal"),
+    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,"Spawn terminal"),
     awful.key({ modkey, "Control" }, "r", awesome.restart,"Restart awesome"),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,"Quit awesome"),
 
@@ -233,30 +256,31 @@ globalkeys = awful.util.table.join(
 
    -- Prompt
     keydoc.group("Misc"),
-    awful.key({ modkey }, "r", function () awful.util.spawn(browser) end, "Run browser"),
-    awful.key({ modkey, "Shift" }, "r", function () awful.util.spawn("dmenu_run") end, "Run program"),
-    awful.key({ modkey }, "p", function () awful.util.spawn("passmenu") end, "Run passmenu"),
+    awful.key({ modkey }, "r", function () awful.spawn(browser) end, "Run browser"),
+    awful.key({ modkey, "Shift" }, "r", function () awful.spawn("dmenu_run") end, "Run program"),
+    awful.key({ modkey }, "p", function () awful.spawn("passmenu") end, "Run passmenu"),
     awful.key({ }, "XF86AudioRaiseVolume", function ()
-      awful.util.spawn("amixer set Master 5%+",false) end),
+      awful.spawn("amixer set Master 5%+",false) end),
     awful.key({ }, "XF86AudioLowerVolume", function ()
-      awful.util.spawn("amixer set Master 5%-",false) end),
+      awful.spawn("amixer set Master 5%-",false) end),
     awful.key({ }, "XF86AudioMute", function ()
-      awful.util.spawn("amixer sset Master toggle",false) end),
+      awful.spawn("amixer sset Master toggle",false) end),
     awful.key({ modkey }, "z", function()
-      awful.util.spawn("mocp --toggle-pause",false) end),
+      awful.spawn("mocp --toggle-pause",false) end),
     awful.key({ modkey }, "x", function()
-      awful.util.spawn("mocp --next",false) end),
+      awful.spawn("mocp --next",false) end),
 
     awful.key({ }, "XF86MonBrightnessDown", function()
-      awful.util.spawn("xbacklight -dec 5",false) end),
+      awful.spawn("xbacklight -dec 5",false) end),
     awful.key({ }, "XF86MonBrightnessUp", function()
-      awful.util.spawn("xbacklight -inc 5",false) end),
+      awful.spawn("xbacklight -inc 5",false) end),
 
     keydoc.group("Misc"),
     awful.key({ }, "Print", function ()
       awful.util.spawn_with_shell("scrot '%M-%S.png' -e 'mv $f ~; notify-send --urgency=low Scrot took_screenshot'",false) end
       , "Take screenshot"),
     awful.key({ "Control", "Mod1" }, "l", function()
+      --TODO: no shell?
       awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
 
     awful.key({ modkey }, "F1", keydoc.display, "Show help"),
@@ -268,7 +292,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,"Close window"),
     awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle        ,"Toggle floating"),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,"Swap client with master"),
-    awful.key({ modkey,           }, "o",                   awful.client.movetoscreen           ,"Move to screen"),
+    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,"Move to screen"),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,"Set ontop"),
     awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen  end,"Maximize client"),
     awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky          end,"Set client sticky")
@@ -277,20 +301,21 @@ clientkeys = awful.util.table.join(
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
+-- TODO:
 for i = 1, 9 do
     globalkeys = awful.util.table.join(globalkeys,
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
-                        local screen = mouse.screen
-                        local tag = awful.tag.gettags(screen)[i]
+                        local screen = awful.screen.focused()
+                        local tag = screen.tags[i]
                         if tag then
-                           awful.tag.viewonly(tag)
+                           tag:view_only()
                         end
                   end),
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
-                      local screen = mouse.screen
-                      local tag = awful.tag.gettags(screen)[i]
+                      local screen = awful.screen.focused()
+                      local tag = screen.tags[i]
                       if tag then
                          awful.tag.viewtoggle(tag)
                       end
@@ -298,18 +323,18 @@ for i = 1, 9 do
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = awful.tag.gettags(client.focus.screen)[i]
+                          local tag = client.focus.screen.tags[i]
                           if tag then
-                              awful.client.movetotag(tag)
+                              client.focus:move_to_tag(tag)
                           end
                      end
                   end),
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
-                          local tag = awful.tag.gettags(client.focus.screen)[i]
+                          local tag = client.focus.screen.tags[i]
                           if tag then
-                              awful.client.toggletag(tag)
+                              client.focus:toggletag(tag)
                           end
                       end
                   end))
@@ -331,15 +356,18 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
+                     screen = awful.screen.prefered,
                      keys = clientkeys,
-                     buttons = clientbuttons } },
+                     buttons = clientbuttons,
+                     placement = awful.placement.no_overlap+awful.placement.no_offscreen
+                   } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } }
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+    --   properties = { screen = 1, tag = 2 }}.
 }
 -- }}}
 
