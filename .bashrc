@@ -7,6 +7,8 @@ HISTIGNORE="history:l"
 
 PROMPT_DIRTRIM=3
 
+PATH=$PATH:~/.local/bin
+
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
