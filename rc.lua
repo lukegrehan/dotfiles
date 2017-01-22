@@ -9,7 +9,8 @@ local keydoc      = require("keydoc")
 local trayer      = require("trayer")
 
 require("awful.autofocus")
-require("eminent")
+--TODO:
+-- require("eminent")
 
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
@@ -58,126 +59,119 @@ screen.connect_signal("property::geometry", set_wallpaper)
 -- }}}
 
 -- {{{ Tags
--- tags = {}
--- tagsWidget = wibox.widget.textbox()
--- tagsWidget:set_text("|")
--- function setStats()
---   local screens = {}
---   for s = 1, screen.count() do
---     local text = {}
---     local prev = {}
+tags = {}
+tagsWidget = wibox.widget.textbox()
+tagsWidget:set_text("|")
+function setStats()
+  local screens = {}
+  for s in screen do
+    local text = {}
+    local prev = {}
 
---     for _, t in ipairs(awful.tag.gettags(s)) do
---       if(#t:clients() > 0) then
---         if t.selected then
---           table.insert(prev, t.name)
---         else
---           if next(prev) ~= nil then
---             table.insert(text, "[" .. table.concat(prev, ",") .. "]")
---             prev = {}
---           end
---           table.insert(text, t.name)
---         end
---       end
---     end
+    for _, t in ipairs(s.tags) do
+      if(#t:clients() > 0) then
+        if t.selected then
+          table.insert(prev, t.name)
+        else
+          if next(prev) ~= nil then
+            table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+            prev = {}
+          end
+          table.insert(text, t.name)
+        end
+      end
+    end
 
---     if next(prev) ~= nil then
---       table.insert(text, "[" .. table.concat(prev, ",") .. "]")
---     end
+    if next(prev) ~= nil then
+      table.insert(text, "[" .. table.concat(prev, ",") .. "]")
+    end
 
---     text = table.concat(text, ",")
---     table.insert(screens, text)
---   end
+    text = table.concat(text, ",")
+    table.insert(screens, text)
+  end
 
---   local res = "<"..table.concat(screens, "> <").."> | "
---   if #screens == 1 then
---     res = res:sub(2, -5) .. " | "
---   end
---   tagsWidget:set_text(res)
--- end
+  local res = "<"..table.concat(screens, "> <").."> | "
+  if #screens == 1 then
+    res = res:sub(2, -5) .. " | "
+  end
+  tagsWidget:set_text(res)
+end
 
--- for s = 1, screen.count() do
---     local thisTags = {}
---     for i = 1, numTags do thisTags[i] = i end
---     tags[s] = awful.tag(thisTags, s, layouts[1])
+client.connect_signal("focus", setStats)
+client.connect_signal("unfocus", setStats)
+client.connect_signal("tagged", setStats)
+client.connect_signal("untagged", setStats)
 
---     client.connect_signal("focus", setStats)
---     client.connect_signal("unfocus", setStats)
---     client.connect_signal("tagged", setStats)
---     client.connect_signal("untagged", setStats)
+-- }}}
 
---     for _, prop in ipairs({ "property::selected", "property::name",
---       "property::activated", "property::screen", "property::index" }) do
---       awful.tag.attached_connect_signal(s, prop, setStats)
---     end
--- end
+-- {{{ Battery Warning
+battery_val = "???"
+battery_warn_parcent = 15
+battery_warned = false
 
--- -- }}}
+batterywidget = wibox.widget.textbox()
+batterywidget:set_text(" ???% | ")
 
--- -- {{{ Battery Warning
--- battery_val = "???"
--- battery_warn_parcent = 15
--- battery_warned = false
+batterytimer = timer({ timeout = 15 })
+batterytimer:connect_signal("timeout",
+  function()
+    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
+    text = fh:read("*l")
+    fh:close()
+    batterywidget:set_text(" " .. text .. "% | ")
 
--- batterywidget = wibox.widget.textbox()
--- batterywidget:set_text(" ???% | ")
+    battery_val = tonumber(text)
+    if (battery_val>battery_warn_parcent) then
+      battery_warned = false
+    elseif(battery_val<battery_warn_parcent and not battery_warned) then
+      battery_warned = true
+      naughty.notify({ preset = naughty.config.presets.critical,
+                    title = "low battery"})
+    end
+  end
+)
+batterytimer:start()
+-- }}}
 
--- batterytimer = timer({ timeout = 15 })
--- batterytimer:connect_signal("timeout",
---   function()
---     fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
---     text = fh:read("*l")
---     fh:close()
---     batterywidget:set_text(" " .. text .. "% | ")
+-- {{{ Wibox
+statusTray = {}
 
---     battery_val = tonumber(text)
---     if (battery_val>battery_warn_parcent) then
---       battery_warned = false
---     elseif(battery_val<battery_warn_parcent and not battery_warned) then
---       battery_warned = true
---       naughty.notify({ preset = naughty.config.presets.critical,
---                     title = "low battery"})
---     end
---   end
--- )
--- batterytimer:start()
--- -- }}}
+function showTray()
+  local st = statusTray[awful.screen.focused()]
 
--- -- {{{ Wibox
--- statusTray = {}
+  local hideTimer = timer({timeout=6})
+  hideTimer:connect_signal("timeout",
+    function()
+      st:off()
+      hideTimer:stop()
+    end)
 
--- for s = 1, screen.count() do
---     local st = trayer(s)
---       st:add(batterywidget)
---       st:add(tagsWidget)
---       st:add(awful.widget.textclock("%a %b %d, %H:%M "))
---       st:add(awful.widget.layoutbox(s))
---     statusTray[s] = st
--- end
+  st:on()
+  hideTimer:start()
+end
 
--- function showTray()
---   local st = statusTray[mouse.screen]
-
---   local hideTimer = timer({timeout=6})
---   hideTimer:connect_signal("timeout",
---     function()
---       st:off()
---       hideTimer:stop()
---     end)
-
---   st:on()
---   hideTimer:start()
--- end
-
--- -- }}}
+-- }}}
 
 awful.screen.connect_for_each_screen(function(s)
   set_wallpaper(s)
 
-  local numtags = 9
   local thisTags = {}
-  for i = 1,numtags do thisTags[i] = i end
+  for i = 1,numTags do thisTags[i] = i end
   awful.tag(thisTags, s, layouts[1])
+
+  local st = trayer(s, {width=300})
+    st:add(batterywidget)
+    st:add(tagsWidget)
+    st:add(wibox.widget.textclock("%a %b %d, %H:%M "))
+    st:add(awful.widget.layoutbox(s))
+
+    -- st:update()
+  statusTray[s] = st
+
+  for _, prop in ipairs({ "property::selected", "property::name",
+    "property::activated", "property::screen", "property::index" }) do
+    awful.tag.attached_connect_signal(s, prop, setStats)
+  end
 end)
 
 
@@ -382,6 +376,7 @@ client.connect_signal("manage", function (c, startup)
         end
     end)
 
+    --TODO: ?
     if not startup then
         if not c.size_hints.user_position and not c.size_hints.program_position then
             awful.placement.no_overlap(c)
@@ -392,14 +387,17 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+--TODO:
 client.connect_signal("property::urgent", function(c) 
   if(c.urgent) then
     naughty.notify({text="URGENT: "..c.class}) 
   end
 end)
 
-tag.connect_signal("property::selected", function(t)
-  showTray()
-end)
+-- TODO:
+-- tag.connect_signal("property::selected", function(t)
+--   showTray()
+-- end)
 
 -- }}}
