@@ -9,8 +9,8 @@ local keydoc      = require("keydoc")
 local trayer      = require("trayer")
 
 require("awful.autofocus")
---TODO:
--- require("eminent")
+
+--TODO: keys popup
 
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
@@ -20,9 +20,9 @@ browser = "chromium"
 modkey = "Mod4"
 numTags = 10
 
--- TODO: awful.layout.layouts
 local layouts =
 {
+    awful.layout.suit.corner.nw,
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
     awful.layout.suit.tile,
@@ -35,6 +35,7 @@ local layouts =
     --awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
     awful.layout.suit.floating
+
 }
 -- }}}
 
@@ -105,33 +106,24 @@ client.connect_signal("untagged", setStats)
 -- }}}
 
 -- {{{ Battery Warning
-battery_val = "???"
+battery_cmd = 'cat /sys/class/power_supply/BAT1/capacity'
 battery_warn_parcent = 15
 battery_warned = false
 
-batterywidget = wibox.widget.textbox()
-batterywidget:set_text(" ???% | ")
+batterywidget = awful.widget.watch(battery_cmd, 5, function(widget, stdout, stderr, exitreason, exitcode)
+  battery_val = tonumber(stdout)
+  widget:set_text(" " .. tostring(battery_val) .. "% | ")
 
-batterytimer = timer({ timeout = 15 })
-batterytimer:connect_signal("timeout",
-  function()
-    fh = assert(io.open("/sys/class/power_supply/BAT1/capacity"))
-    text = fh:read("*l")
-    fh:close()
-    batterywidget:set_text(" " .. text .. "% | ")
-
-    battery_val = tonumber(text)
-    if (battery_val>battery_warn_parcent) then
-      battery_warned = false
-    elseif(battery_val<battery_warn_parcent and not battery_warned) then
-      battery_warned = true
-      naughty.notify({ preset = naughty.config.presets.critical,
-                    title = "low battery"})
-    end
+  if (battery_val > battery_warn_parcent) then
+    battery_warned = false
+  elseif (battery_val < battery_warn_parcent and not battery_warned) then
+    battery_warned = true
+    naughty.notify({ preset = naughty.config.presets.critical
+                   , title = "low battery"
+                   })
   end
-)
-batterytimer:start()
--- }}}
+
+end)
 
 -- {{{ Wibox
 statusTray = {}
@@ -159,14 +151,13 @@ awful.screen.connect_for_each_screen(function(s)
   for i = 1,numTags do thisTags[i] = i end
   awful.tag(thisTags, s, layouts[1])
 
-  local st = trayer(s, {width=300})
+  local st = trayer(s)
     st:add(batterywidget)
     st:add(tagsWidget)
     st:add(wibox.widget.textclock("%a %b %d, %H:%M "))
     st:add(awful.widget.layoutbox(s))
-
-    -- st:update()
   statusTray[s] = st
+  -- st:update()
 
   for _, prop in ipairs({ "property::selected", "property::name",
     "property::activated", "property::screen", "property::index" }) do

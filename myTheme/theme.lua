@@ -22,13 +22,15 @@ theme.border_focus  = "#386799"
 theme.border_marked = "#91231c"
 
 -- Display the taglist squares
-theme.taglist_squares_sel   = path.."/taglist/sel.png"
-theme.taglist_squares_unsel = path.."/taglist/unsel.png"
+-- theme.taglist_squares_sel   = path.."/taglist/sel.png"
+-- theme.taglist_squares_unsel = path.."/taglist/unsel.png"
 
 -- You can use your own command to set your wallpaper
 theme.wallpaper=path.."/backgrounds/pro-dark.png"
 
 -- You can use your own layout icons like this:
+--TODO: change icons to new style
+theme.layout_cornernw = path.."/layouts/cornernww.png"
 theme.layout_fairh = path.."/layouts/fairhw.png"
 theme.layout_fairv = path.."/layouts/fairvw.png"
 theme.layout_floating  = path.."/layouts/floatingw.png"
