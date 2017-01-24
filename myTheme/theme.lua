@@ -4,7 +4,7 @@ theme = {}
 -- theme.icons      =  path .. "/icons"
 -- theme.taglist_bg_empty    = "png:" .. theme.icons .. "/empty.png"
 
-theme.font          = "tamsyn 10"
+theme.font          = "miscTamsyn 10"
 
 theme.bg_normal     = "#1E1E1E" --1E"
 theme.bg_focus      = "#386799"
