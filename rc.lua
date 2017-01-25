@@ -1,16 +1,14 @@
 -- Standard awesome library
-local gears       = require("gears")
-local awful       = require("awful")
-      awful.rules = require("awful.rules")
-local wibox       = require("wibox")
-local beautiful   = require("beautiful")
-local naughty     = require("naughty")
-local keydoc      = require("keydoc")
-local trayer      = require("trayer")
+local gears         = require("gears")
+local awful         = require("awful")
+      awful.rules   = require("awful.rules")
+local wibox         = require("wibox")
+local beautiful     = require("beautiful")
+local naughty       = require("naughty")
+local trayer        = require("trayer")
+local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 require("awful.autofocus")
-
---TODO: keys popup
 
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
@@ -171,10 +169,9 @@ local oldSelected = {}
 local hasSelection = false
 
 globalkeys = awful.util.table.join(
-    keydoc.group("Tag manipulation"),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ,"Change to left tag"),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ,"Change to right tag"),
-    awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,"Change to prev tag"),
+    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ,{description = "Change to left tag", group = "Tag Manipulation"}),
+    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ,{description = "Change to right tag", group = "Tag Manipulation"}),
+    awful.key({ modkey,           }, "Escape", function() awful.tag.history.restore(mouse.screen) end,{description = "Change to prev tag", group = "Tag Manipulation"}),
     awful.key({ modkey,           }, "Down", function ()
       local selected = awful.tag.selectedlist(mouse.screen)
       if(not hasSelection) then
@@ -182,112 +179,106 @@ globalkeys = awful.util.table.join(
         hasSelection = true
       end
       awful.tag.viewnone()
-    end, "Deselect all current tags"),
+    end, {description = "Deselect all current tags", group = "Tag Manipulation"}),
     awful.key({ modkey,           }, "Up", function ()
       if(hasSelection) then
         awful.tag.viewmore(oldSelected)
         oldSelected = {}
         hasSelection = false
       end
-    end, "Reselect deselected tags"),
+    end, {description = "Reselect deselected tags", group = "Tag Manipulation"}),
 
-    keydoc.group("Layout manipulation"),
 
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
-        end,"Focus next client in stack"),
+        end,{description = "Focus next client in stack", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "k",
         function ()
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
-        end,"Focus prev client in stack"),
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,"Swap next client"),
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,"Swap prev client"),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end ,"Focus next screen"),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end ,"Focus prev screen"),
-    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,"Jump to urgent"),
+        end,{description = "Focus prev client in stack", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,{description = "Swap next client", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,{description = "Swap prev client", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end ,{description = "Focus next screen", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end ,{description = "Focus prev screen", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,{description = "Jump to urgent", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "Tab",
         function ()
             awful.client.focus.history.previous()
             if client.focus then
                 client.focus:raise()
             end
-        end,"Focus prev client"),
+        end,{description = "Focus prev client", group = "Layout Manipulation"}),
 
     -- Standard program
-    keydoc.group("Misc"),
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,"Spawn terminal"),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,"Restart awesome"),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,"Quit awesome"),
+    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,{description = "Spawn terminal", group = "Misc"}),
+    awful.key({ modkey, "Control" }, "r", awesome.restart,{description = "Restart awesome", group = "Misc"}),
+    awful.key({ modkey, "Shift"   }, "q", awesome.quit,{description = "Quit awesome", group = "Misc"}),
 
-    keydoc.group("Layout manipulation"),
+    --TODO:
     awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)
-                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,"Increase number of master windows"),
+                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,{description = "Increase number of master windows", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)
-                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,"Decrease number of master windows"),
+                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,{description = "Decrease number of master windows", group = "Layout Manipulation"}),
     awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)
-                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,"Increase number of slave columns"),
+                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Increase number of slave columns", group = "Layout Manipulation"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)
-                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,"Decrease number of slave columns"),
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end,"Increase master window size"),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end,"Decrease master window size"),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,"Cycle layout forward"),
-    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,"Cycle layout backward"),
+                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Decrease number of slave columns", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end,{description = "Increase master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end,{description = "Decrease master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,{description = "Cycle layout forward", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,{description = "Cycle layout backward", group = "Layout Manipulation"}),
 
-    awful.key({ modkey, "Control" }, "n", awful.client.restore,"Restore client"),
-    awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,"Focus master"),
+    awful.key({ modkey, "Control" }, "n", awful.client.restore,{description = "Restore client", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
 
    -- Prompt
-    keydoc.group("Misc"),
-    awful.key({ modkey }, "r", function () awful.spawn(browser) end, "Run browser"),
-    awful.key({ modkey, "Shift" }, "r", function () awful.spawn("dmenu_run") end, "Run program"),
-    awful.key({ modkey }, "p", function () awful.spawn("passmenu") end, "Run passmenu"),
+    awful.key({ modkey }, "r", function () awful.spawn(browser) end, {description = "Run browser", group = "Misc"}),
+    awful.key({ modkey, "Shift" }, "r", function () awful.spawn("dmenu_run") end, {description = "Run program", group = "Misc"}),
+    awful.key({ modkey }, "p", function () awful.spawn("passmenu") end, {description = "Run passmenu", group = "Misc"}),
+
     awful.key({ }, "XF86AudioRaiseVolume", function ()
-      awful.spawn("amixer set Master 5%+",false) end),
+      awful.spawn("amixer set Master 5%+",false) end,{description = "raise volume", group = "Sound"} ),
     awful.key({ }, "XF86AudioLowerVolume", function ()
-      awful.spawn("amixer set Master 5%-",false) end),
+      awful.spawn("amixer set Master 5%-",false) end,{description = "lower volume", group = "Sound"}),
     awful.key({ }, "XF86AudioMute", function ()
-      awful.spawn("amixer sset Master toggle",false) end),
+      awful.spawn("amixer sset Master toggle",false) end,{description = "mute", group = "Sound"}),
+
     awful.key({ modkey }, "z", function()
-      awful.spawn("mocp --toggle-pause",false) end),
+      awful.spawn("mocp --toggle-pause",false) end,{description = "pause music", group = "Music"}),
     awful.key({ modkey }, "x", function()
-      awful.spawn("mocp --next",false) end),
+      awful.spawn("mocp --next",false) end,{description = "next song", group = "Music"}),
 
     awful.key({ }, "XF86MonBrightnessDown", function()
-      awful.spawn("xbacklight -dec 5",false) end),
+      awful.spawn("xbacklight -dec 5",false) end,{description = "decrease brightness", group = "Misc"}),
     awful.key({ }, "XF86MonBrightnessUp", function()
-      awful.spawn("xbacklight -inc 5",false) end),
+      awful.spawn("xbacklight -inc 5",false) end,{description = "increase brightness", group = "Misc"}),
 
-    keydoc.group("Misc"),
     awful.key({ }, "Print", function ()
       awful.util.spawn_with_shell("scrot '%M-%S.png' -e 'mv $f ~; notify-send --urgency=low Scrot took_screenshot'",false) end
-      , "Take screenshot"),
-    awful.key({ "Control", "Mod1" }, "l", function()
-      --TODO: no shell?
-      awful.util.spawn_with_shell("xtrlock") end, "Lock screen"),
+      , {description = "Take screenshot", group = "Misc"}),
+    awful.key({ "Control", "Mod1" }, "l", function() awful.spawn("xtrlock") end, {description = "Lock screen", group = "Misc"}),
 
-    awful.key({ modkey }, "F1", keydoc.display, "Show help"),
-    awful.key({ modkey }, "s", showTray, "Show status bar")
+    awful.key({ modkey }, "F1", hotkeys_popup.show_help, {description = "Show help (...so meta)", group = "Misc"}),
+    awful.key({ modkey }, "s", showTray, {description = "Show status bar", group = "Misc"})
 )
 
 clientkeys = awful.util.table.join(
-    keydoc.group("Client keys"),
-    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,"Close window"),
-    awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle        ,"Toggle floating"),
-    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,"Swap client with master"),
-    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,"Move to screen"),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,"Set ontop"),
-    awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen  end,"Maximize client"),
-    awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky          end,"Set client sticky")
+    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,{description = "Close window", group = "Client"}),
+    awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle        ,{description = "Toggle floating", group = "Client"}),
+    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,{description = "Swap client with master", group = "Client"}),
+    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,{description = "Move to screen", group = "Client"}),
+    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,{description = "Set ontop", group = "Client"}),
+    awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen  end,{description = "Maximize client", group = "Client"}),
+    awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky          end,{description = "Set client sticky", group = "Client"})
 )
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
--- TODO:
-for i = 1, 9 do
+for i = 1, numTags do
     globalkeys = awful.util.table.join(globalkeys,
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
@@ -346,13 +337,12 @@ awful.rules.rules = {
                      buttons = clientbuttons,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
                    } },
-    { rule = { class = "pinentry" },
-      properties = { floating = true } },
-    { rule = { class = "gimp" },
-      properties = { floating = true } }
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = 2 }}.
+    { rule_any = {
+        instance = {"pinentry"},
+        name = {"Event Tester"},
+        class = {"gimp"},
+        role = {"pop-up"}
+      }, properties = { floating = true }}
 }
 -- }}}
 
@@ -367,12 +357,10 @@ client.connect_signal("manage", function (c, startup)
         end
     end)
 
-    --TODO: ?
-    if not startup then
-        if not c.size_hints.user_position and not c.size_hints.program_position then
-            awful.placement.no_overlap(c)
-            awful.placement.no_offscreen(c)
-        end
+    if awesome.startup
+      and not c.size_hints.user_position
+      and not c.size_hints.program_position then
+        awful.placement.no_offscreen(c)
     end
 end)
 
@@ -386,9 +374,8 @@ client.connect_signal("property::urgent", function(c)
   end
 end)
 
--- TODO:
--- tag.connect_signal("property::selected", function(t)
---   showTray()
--- end)
+tag.connect_signal("property::selected", function(t)
+  showTray()
+end)
 
 -- }}}
