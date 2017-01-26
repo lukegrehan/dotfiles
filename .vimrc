@@ -51,3 +51,6 @@ set whichwrap+=<,>,h,l,[,]
 "Unhighlight searches
 nnoremap <leader><space> :noh<cr>
 
+"Dual of J; split line at cursor
+nnoremap K i<CR><Esc>
+
