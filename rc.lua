@@ -217,7 +217,6 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart,{description = "Restart awesome", group = "Misc"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,{description = "Quit awesome", group = "Misc"}),
 
-    --TODO:
     awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)
                                              naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,{description = "Increase number of master windows", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)
@@ -366,13 +365,6 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
-
---TODO:
-client.connect_signal("property::urgent", function(c) 
-  if(c.urgent) then
-    naughty.notify({text="URGENT: "..c.class}) 
-  end
-end)
 
 tag.connect_signal("property::selected", function(t)
   showTray()
