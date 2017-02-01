@@ -29,7 +29,6 @@ theme.border_marked = "#91231c"
 theme.wallpaper=path.."/backgrounds/pro-dark.png"
 
 -- You can use your own layout icons like this:
---TODO: change icons to new style
 theme.layout_cornernw = path.."/layouts/cornernww.png"
 theme.layout_fairh = path.."/layouts/fairhw.png"
 theme.layout_fairv = path.."/layouts/fairvw.png"
