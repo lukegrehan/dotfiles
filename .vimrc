@@ -31,6 +31,10 @@ set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
 set confirm        "Confirm save on exit
 set synmaxcol=128  "Stop syntax highlighting past 128 cols to... make go fast now
+set exrc           "Project specific .vimrc files
+set secure
+
+let mapleader = " " "<Leader> = <Space>
 
 filetype plugin indent on "proper indents depending on file type
 
