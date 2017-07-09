@@ -1,6 +1,7 @@
 local wibox = require("wibox")
 local awful = require("awful")
 local naughty = require("naughty")
+local beautiful = require("beautiful")
 
 --TODO:
 
@@ -14,6 +15,20 @@ end
 function add(self, widget)
   self.layout:add(widget)
   self.wibox:set_widget(self.layout)
+end
+
+function getwidth(self)
+  local width = 1
+  local context = {dpi=beautiful.xresources.get_dpi(1)}
+  for i, widget in ipairs(self.layout.children) do
+    local w, h = wibox.widget.base.fit_widget(widget, context, widget, 9999, 9999)
+    if w == h then -- probably something square
+      w = self.geom.height
+    end
+    width = width + w
+  end
+
+  return width
 end
 
 function tray.new(s, geometry)
@@ -37,12 +52,12 @@ function tray.new(s, geometry)
     wb.visible = false
 
 
-  -- local update = function(self)
-  --   local width = getwidth(self)
-  --   self.geom.width = width
-  --   self.geom.x = self.geom.basex - width
-  --   self.wibox:geometry(self.geom)
-  -- end
+  local update = function(self)
+    local width = getwidth(self)
+    self.geom.width = width
+    self.geom.x = self.geom.basex - width
+    self.wibox:geometry(self.geom)
+  end
 
   local self = {
     layout = layout,
@@ -55,10 +70,6 @@ function tray.new(s, geometry)
     update = update,
     add = add,
   }
-
-  -- update(self)
-
-  -- layout:connect_signal("widget::updated", function() update(self) end)
 
   return self
 end

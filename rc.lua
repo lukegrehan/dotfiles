@@ -96,10 +96,6 @@ function setStats()
   tagsWidget:set_text(res)
 end
 
-client.connect_signal("focus", setStats)
-client.connect_signal("unfocus", setStats)
-client.connect_signal("tagged", setStats)
-client.connect_signal("untagged", setStats)
 
 -- }}}
 
@@ -128,6 +124,7 @@ statusTray = {}
 
 function showTray()
   local st = statusTray[awful.screen.focused()]
+  st:update()
 
   local hideTimer = timer({timeout=6})
   hideTimer:connect_signal("timeout",
@@ -138,6 +135,12 @@ function showTray()
 
   st:on()
   hideTimer:start()
+end
+
+function updateTray()
+  local st = statusTray[awful.screen.focused()]
+  st:update()
+  setStats()
 end
 
 -- }}}
@@ -159,9 +162,14 @@ awful.screen.connect_for_each_screen(function(s)
 
   for _, prop in ipairs({ "property::selected", "property::name",
     "property::activated", "property::screen", "property::index" }) do
-    awful.tag.attached_connect_signal(s, prop, setStats)
+    awful.tag.attached_connect_signal(s, prop, updateTray)
   end
 end)
+
+client.connect_signal("focus"   , updateTray)
+client.connect_signal("unfocus" , updateTray)
+client.connect_signal("tagged"  , updateTray)
+client.connect_signal("untagged", updateTray)
 
 
 -- {{{ Key bindings
@@ -225,8 +233,8 @@ globalkeys = awful.util.table.join(
                                              naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Increase number of slave columns", group = "Layout Manipulation"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)
                                              naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Decrease number of slave columns", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end,{description = "Increase master window size", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end,{description = "Decrease master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.025)    end,{description = "Increase master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.025)    end,{description = "Decrease master window size", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,{description = "Cycle layout forward", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,{description = "Cycle layout backward", group = "Layout Manipulation"}),
 
