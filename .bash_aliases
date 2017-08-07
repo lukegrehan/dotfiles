@@ -17,4 +17,6 @@ alias tmux='tmux -2'
 alias v='vim'
 alias ytdl='youtube-dl --extract-audio --audio-format mp3'
 alias startRemote='/opt/urserver/urserver --daemon'
+alias pandoc='pandoc --latex-engine=xelatex'
+alias ghci='stack exec ghci'
 
