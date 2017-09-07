@@ -1,5 +1,8 @@
 remove Lock = Caps_Lock
-add Lock = Escape
-keysym Tab = Escape
-keysym Caps_Lock = Tab
-keysym Escape = Caps_Lock
+clear Lock
+! add Lock = Escape
+
+keycode 9 = Caps_Lock
+keycode 23 = Escape
+keycode 66 = Tab
+
