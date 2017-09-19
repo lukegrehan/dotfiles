@@ -125,16 +125,12 @@ statusTray = {}
 function showTray()
   local st = statusTray[awful.screen.focused()]
   st:update()
-
-  local hideTimer = timer({timeout=6})
-  hideTimer:connect_signal("timeout",
-    function()
-      st:off()
-      hideTimer:stop()
-    end)
-
   st:on()
-  hideTimer:start()
+
+  gears.timer.start_new(6, function()
+    st:off()
+    return false
+  end)
 end
 
 function updateTray()
