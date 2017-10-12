@@ -1,28 +1,9 @@
 ServerAliveInterval 5
 Host school
-	HostName macneill.scss.tcd.ie
-	User grehanlu
-
-Host stoker
-	HostName stoker.cs.tcd.ie
-	User grehanlu
-	ProxyCommand ssh school nc %h %p
-
-Host cube
-	HostName cube.netsoc.ie
-	ForwardX11 yes
-	User lukeg
-
-Host spoon
-	HostName spoon.netsoc.ie
-	User lukeg
+    HostName shell1.doc.ic.ac.uk
+	User lpg17
 
 Host pi
 	HostName lukegrehan.com
 	User luke
 
-Host pischool
-	HostName lukegrehan.com
-	User luke
-	ProxyCommand ssh cube nc %h %p
-	

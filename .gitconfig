@@ -3,7 +3,7 @@
 	st = status -sb
     unstage = reset HEAD -- 
 [user]
-	email = luketenant@gmail.com
+	email = luke.grehan17@imperial.ac.uk
 	name = Luke Grehan
 [push]
 	default = simple
