@@ -8,6 +8,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'romainl/vim-cool'
 call plug#end()
 
 set number         "Absolute line number on current line
@@ -31,8 +32,16 @@ set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
 set confirm        "Confirm save on exit
 set synmaxcol=128  "Stop syntax highlighting past 128 cols to... make go fast now
+" set termguicolors  "True colour support
 set exrc           "Project specific .vimrc files
 set secure
+" set ttyscroll=3    "Faster scrolling
+" set lazyredraw
+
+if &term =~# '^screen'
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
 
 let mapleader = " " "<Leader> = <Space>
 
@@ -57,4 +66,19 @@ nnoremap <leader><space> :noh<cr>
 
 "Dual of J; split line at cursor
 nnoremap K i<CR><Esc>
+
+function! MkScratch()
+  setlocal buftype=nofile
+  setlocal bufhidden=hide
+  setlocal noswapfile
+  setlocal buflisted
+endfunction
+nnoremap <leader>s :call MkScratch()<cr>
+
+" augroup latex
+"   autocmd!
+"   autocmd Filetype plaintex,tex,bib set nocursorline
+"   autocmd Filetype plaintex,tex,bib set norelativenumber
+"   autocmd Filetype plaintex,tex,bib set nonumber
+" augroup end
 

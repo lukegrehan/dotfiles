@@ -1,2 +1,4 @@
 #!/bin/bash
-java -jar ~/Stuff/games/Minecraft.jar &
+# java -jar ~/Stuff/games/Minecraft.jar &
+# java -jar ~/Stuff/games/atlauncher/ATLauncher.jar
+multimc

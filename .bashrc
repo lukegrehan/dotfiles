@@ -7,8 +7,6 @@ HISTIGNORE="history:l:shutdown"
 
 PROMPT_DIRTRIM=3
 
-PATH=$PATH:~/.local/bin
-
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
@@ -37,8 +35,8 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 alias ll='ls -alFh --group-directories-first'
-alias la='ls -A --group-directories-first'
-alias l='ls -CF --group-directories-first'
+alias la='ls -v -A --group-directories-first'
+alias l='ls -v -CF --group-directories-first'
 alias alert='notify-send --urgency=critical  -t 10000 "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 if [ -f ~/.bash_aliases ]; then

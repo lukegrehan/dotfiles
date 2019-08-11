@@ -1,6 +1,10 @@
-URxvt*font: xft:miscTamsyn:size=10:antialias=true, xft:Terminus:size=10, xft:symbola:size=10
+URxvt*font: xft:miscTamsyn:size=11:antialias=false, xft:Terminus:size=10, xft:symbola:size=10
 URxvt*scrollBar: false
 URxvt*foreground: rgb:a8/a8/a8
 URxvt*background: rgb:00/00/00
 URxvt*color12: rgb:5c/5c/ff
 URxvt*fading:  40
+URxvt.perl-ext-common:  resize-font
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+

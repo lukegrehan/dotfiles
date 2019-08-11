@@ -13,8 +13,9 @@ require("awful.autofocus")
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
-terminal = "urxvt"
-browser = "chromium"
+terminal = "alacritty"
+-- browser = "chromium"
+browser = "qutebrowser"
 modkey = "Mod4"
 numTags = 10
 
@@ -343,7 +344,7 @@ awful.rules.rules = {
     { rule_any = {
         instance = {"pinentry"},
         name = {"Event Tester"},
-        class = {"gimp"},
+        class = {"gimp", "Peek"},
         role = {"pop-up"}
       }, properties = { floating = true }}
 }
