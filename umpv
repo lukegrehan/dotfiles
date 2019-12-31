@@ -90,8 +90,10 @@ else:
     os.mkfifo(FIFO, 0o600)
 
     opts = (os.getenv("MPV") or "mpv").split()
-    opts.extend(["--no-terminal", "--profile=youtube", "--force-window", "--input-file=" + FIFO,
-                 "--"])
+    opts.extend(["--pause", "--speed=2", "--volume=60"])
+    opts.extend(["--hwdec=auto"])
+    opts.extend(["--ytdl-format=bestvideo[height<=720]+bestaudio/best"])
+    opts.extend(["--no-terminal", "--force-window", "--input-file=" + FIFO, "--"])
     opts.extend(files)
 
     subprocess.check_call(opts)
