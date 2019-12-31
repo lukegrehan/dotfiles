@@ -1,7 +1,8 @@
 [alias]
 	l = log --graph --pretty=oneline --abbrev-commit
 	st = status -sb
-    unstage = reset HEAD -- 
+    unstage = reset HEAD --
+    squash = "!git reset --soft $(git merge-base ${1:-master} $(git rev-parse --abbrev-ref HEAD)) && git commit && git rebase ${1:-master} && :"
 [user]
 	email = luketenant@gmail.com
 	name = Luke Grehan
@@ -9,3 +10,11 @@
 	default = simple
 [core]
 	editor = vim
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	keepBackup = false
+	prompt = false
