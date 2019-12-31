@@ -53,6 +53,14 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+# Allow websites to show notifications.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+config.set('content.notifications', False, 'https://www.reddit.com')
+
 # Allow pdf.js to view PDF files in the browser. Note that the files can
 # still be downloaded by clicking the download button in the pdf.js
 # viewer.
@@ -66,6 +74,15 @@ c.content.pdfjs = True
 #   - system: Use the system wide proxy.
 #   - none: Don't use any proxy
 c.content.proxy = 'system'
+
+# Allow websites to register protocol handlers via
+# `navigator.registerProtocolHandler`.
+# Type: BoolAsk
+# Valid values:
+#   - true
+#   - false
+#   - ask
+config.set('content.register_protocol_handler', True, 'https://mail.google.com?extsrc=mailto&url=%25s')
 
 # Shrink the completion to be smaller than the configured size if there
 # are no scrollbars.
@@ -197,6 +214,59 @@ c.url.searchengines = {'DEFAULT': 'https://start.duckduckgo.com/?q={}', 'b': 'ht
 # Page(s) to open at the start.
 # Type: List of FuzzyUrl, or FuzzyUrl
 c.url.start_pages = 'https://start.duckduckgo.com'
+
+# Default monospace fonts. Whenever "monospace" is used in a font
+# setting, it's replaced with the fonts listed here.
+# Type: Font
+c.fonts.monospace = '"xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
+
+# Font used in the completion widget.
+# Type: Font
+c.fonts.completion.entry = '14pt monospace'
+
+# Font used in the completion categories.
+# Type: Font
+c.fonts.completion.category = 'bold 14pt monospace'
+
+# Font used for the debugging console.
+# Type: QtFont
+c.fonts.debug_console = '14pt monospace'
+
+# Font used for the downloadbar.
+# Type: Font
+c.fonts.downloads = '14pt monospace'
+
+# Font used for the hints.
+# Type: Font
+c.fonts.hints = 'bold 14pt monospace'
+
+# Font used in the keyhint widget.
+# Type: Font
+c.fonts.keyhint = '14pt monospace'
+
+# Font used for error messages.
+# Type: Font
+c.fonts.messages.error = '14pt monospace'
+
+# Font used for info messages.
+# Type: Font
+c.fonts.messages.info = '14pt monospace'
+
+# Font used for warning messages.
+# Type: Font
+c.fonts.messages.warning = '14pt monospace'
+
+# Font used for prompts.
+# Type: Font
+c.fonts.prompts = '14pt sans-serif'
+
+# Font used in the statusbar.
+# Type: Font
+c.fonts.statusbar = '14pt monospace'
+
+# Font used in the tab bar.
+# Type: QtFont
+c.fonts.tabs = '14pt monospace'
 
 # Bindings for normal mode
 config.bind(';E', 'hint --rapid expando')
