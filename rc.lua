@@ -101,7 +101,7 @@ end
 -- }}}
 
 -- {{{ Battery Warning
-battery_cmd = 'cat /sys/class/power_supply/BAT1/capacity'
+battery_cmd = 'cat /sys/class/power_supply/BAT0/capacity /sys/class/power_supply/BAT1/capacity'
 battery_warn_parcent = 15
 battery_warned = false
 
@@ -124,14 +124,16 @@ end)
 statusTray = {}
 
 function showTray()
-  local st = statusTray[awful.screen.focused()]
-  st:update()
-  st:on()
+  for s in screen do
+    local st = statusTray[s]
+      st:update()
+      st:on()
 
-  gears.timer.start_new(6, function()
-    st:off()
-    return false
-  end)
+    gears.timer.start_new(6, function()
+      st:off()
+      return false
+    end)
+  end
 end
 
 function updateTray()

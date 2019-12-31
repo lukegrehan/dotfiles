@@ -1,3 +1,4 @@
+local dpi = require("beautiful.xresources").apply_dpi
 path = os.getenv("HOME").."/.config/awesome/themes/myTheme"
 theme = {}
 
@@ -42,6 +43,8 @@ theme.layout_tile = path.."/layouts/tilew.png"
 theme.layout_tiletop = path.."/layouts/tiletopw.png"
 theme.layout_spiral  = path.."/layouts/spiralw.png"
 theme.layout_dwindle = path.."/layouts/dwindlew.png"
+
+theme.notification_icon_size = dpi(64)
 
 return theme
 -- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80

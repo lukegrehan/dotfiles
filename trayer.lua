@@ -33,7 +33,7 @@ end
 
 function tray.new(s, geometry)
   geometry = geometry or {}
-  local scrgeom = screen[s].workarea
+  local scrgeom = s.workarea
   local basex = geometry.x or (scrgeom.width - scrgeom.x - 6)
   local width = geometry.width or 270
   local geom = {
