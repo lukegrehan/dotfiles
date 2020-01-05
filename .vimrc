@@ -3,9 +3,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'michaeljsmith/vim-indent-object'
 Plug 'romainl/vim-cool'
-" Plug 'neovimhaskell/haskell-vim'
+Plug 'ajh17/VimCompletesMe'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 call plug#end()
 
@@ -73,6 +72,9 @@ nnoremap <leader>n :bn<cr>
 
 "Allow . in visual mode
 vnoremap . :norm.<CR>
+
+"Allow global filters
+nnoremap g! :%!
 
 function! MkScratch()
  setlocal buftype=nofile
