@@ -50,3 +50,4 @@ fi
 if [ -n "$VIRTUAL_ENV" ]; then
     . "$VIRTUAL_ENV/bin/activate"
 fi
+

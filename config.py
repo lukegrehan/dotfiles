@@ -215,10 +215,10 @@ c.url.searchengines = {'DEFAULT': 'https://start.duckduckgo.com/?q={}', 'b': 'ht
 # Type: List of FuzzyUrl, or FuzzyUrl
 c.url.start_pages = 'https://start.duckduckgo.com'
 
-# Default monospace fonts. Whenever "monospace" is used in a font
-# setting, it's replaced with the fonts listed here.
-# Type: Font
-c.fonts.monospace = '"xos4 Terminus", Terminus, Monospace, "DejaVu Sans Mono", Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
+# # Default monospace fonts. Whenever "monospace" is used in a font
+# # setting, it's replaced with the fonts listed here.
+# # Type: Font
+c.fonts.default_family = ["xos4 Terminus", "Terminus", "Monospace", "DejaVu Sans Mono", "Monaco", "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", "Courier", "Liberation Mono", "monospace", "Fixed", "Consolas", "Terminal"]
 
 # Font used in the completion widget.
 # Type: Font

@@ -220,7 +220,7 @@ globalkeys = awful.util.table.join(
         end,{description = "Focus prev client", group = "Layout Manipulation"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,{description = "Spawn terminal", group = "Misc"}),
+    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal, {screen = awful.screen.focused({client=true})}) end,{description = "Spawn terminal", group = "Misc"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,{description = "Restart awesome", group = "Misc"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,{description = "Quit awesome", group = "Misc"}),
 
@@ -239,10 +239,11 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore,{description = "Restore client", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "e", function() awful.spawn("splatmoji type") end,{description = "Type emoji", group = "Misc"}),
 
    -- Prompt
     awful.key({ modkey }, "r", function () awful.spawn(browser) end, {description = "Run browser", group = "Misc"}),
-    awful.key({ modkey, "Shift" }, "r", function () awful.spawn("dmenu_run") end, {description = "Run program", group = "Misc"}),
+    awful.key({ modkey, "Shift" }, "r", function () awful.spawn("rofi -show run") end, {description = "Run program", group = "Misc"}),
     awful.key({ modkey }, "p", function () awful.spawn("passmenu") end, {description = "Run passmenu", group = "Misc"}),
 
     awful.key({ }, "XF86AudioRaiseVolume", function ()
@@ -251,11 +252,13 @@ globalkeys = awful.util.table.join(
       awful.spawn("amixer set Master 5%-",false) end,{description = "lower volume", group = "Sound"}),
     awful.key({ }, "XF86AudioMute", function ()
       awful.spawn("amixer sset Master toggle",false) end,{description = "mute", group = "Sound"}),
-
     awful.key({ modkey }, "z", function()
-      awful.spawn("mocp --toggle-pause",false) end,{description = "pause music", group = "Music"}),
+      awful.spawn("mocp --toggle-pause",false) end,{description = "pause music", group = "Sound"}),
     awful.key({ modkey }, "x", function()
-      awful.spawn("mocp --next",false) end,{description = "next song", group = "Music"}),
+      awful.spawn("mocp --next",false) end,{description = "next song", group = "Sound"}),
+
+    awful.key({ }, "XF86Display", function ()
+      awful.spawn("arandr") end,{description = "Screen setup", group = "Screens"}),
 
     awful.key({ }, "XF86MonBrightnessDown", function()
       awful.spawn("xbacklight -dec 5",false) end,{description = "decrease brightness", group = "Misc"}),
@@ -293,7 +296,7 @@ for i = 1, numTags do
                         if tag then
                            tag:view_only()
                         end
-                  end),
+                  end, {description = "View only tag " .. i, group = "Tag Manipulation"}),
         awful.key({ modkey, "Control" }, "#" .. i + 9,
                   function ()
                       local screen = awful.screen.focused()
@@ -301,7 +304,7 @@ for i = 1, numTags do
                       if tag then
                          awful.tag.viewtoggle(tag)
                       end
-                  end),
+                  end, {description = "View tag " .. i, group = "Tag Manipulation"}),
         awful.key({ modkey, "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
@@ -310,16 +313,16 @@ for i = 1, numTags do
                               client.focus:move_to_tag(tag)
                           end
                      end
-                  end),
+                  end, {description = "Move window to tag " .. i, group = "Tag Manipulation"}),
         awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
                   function ()
                       if client.focus then
                           local tag = client.focus.screen.tags[i]
                           if tag then
-                              client.focus:toggletag(tag)
+                              client.focus:toggle_tag(tag)
                           end
                       end
-                  end))
+                  end, {description = "Toggle tag " .. i .. " on window", group = "Tag Manipulation"}))
 end
 
 clientbuttons = awful.util.table.join(

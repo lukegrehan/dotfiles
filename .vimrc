@@ -4,7 +4,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'romainl/vim-cool'
-Plug 'ajh17/VimCompletesMe'
+Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
 call plug#end()
 
@@ -34,6 +34,10 @@ set termguicolors  "True colour support
 set exrc           "Project specific .vimrc files
 set secure
 set hidden         "Open buffers without neccessarily saving
+set splitright     "Open splits to the right and below
+set splitbelow
+
+set path+=**
 
 if &term =~# '^screen' "tmux magic
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -54,15 +58,8 @@ syntax enable
 set so=999 "set scroll off so cursor is always as near as possible to centered
 set backspace=indent,eol,start " make backspace behave in a sane manner
 
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
-set undodir=~/.vim/undo//
-
 "keys to wrap lines on
 set whichwrap+=<,>,h,l,[,]
-
-"Unhighlight searches
-nnoremap <leader><space> :noh<cr>
 
 "Dual of J; split line at cursor
 nnoremap K i<CR><Esc>
@@ -70,11 +67,25 @@ nnoremap K i<CR><Esc>
 "Next buffer
 nnoremap <leader>n :bn<cr>
 
+"Prev buffer
+nnoremap <leader>b :bp<cr>
+
 "Allow . in visual mode
 vnoremap . :norm.<CR>
 
 "Allow global filters
 nnoremap g! :%!
+
+"Move Lines
+nnoremap <leader>j  :<c-u>execute 'move +'. v:count1<cr>
+nnoremap <leader>k  :<c-u>execute 'move -1-'. v:count1<cr>
+
+"Retain selection on shift
+xnoremap < <gv
+xnoremap > >gv
+
+"Line operator
+onoremap <silent> ; :<C-U>normal! 0v$<CR>
 
 function! MkScratch()
  setlocal buftype=nofile
@@ -83,4 +94,3 @@ function! MkScratch()
  setlocal buflisted
 endfunction
 nnoremap <leader>s :call MkScratch()<cr>
-
