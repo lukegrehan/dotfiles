@@ -91,9 +91,9 @@ else:
 
     opts = (os.getenv("MPV") or "mpv").split()
     opts.extend(["--pause", "--speed=2", "--volume=60"])
-    opts.extend(["--hwdec=auto"])
+    opts.extend(["--hwdec=auto", "--x11-name=umpv"])
     opts.extend(["--ytdl-format=bestvideo[height<=720]+bestaudio/best"])
-    opts.extend(["--no-terminal", "--force-window", "--input-file=" + FIFO, "--"])
+    opts.extend(["--no-terminal", "--force-window=immediate", "--input-file=" + FIFO, "--"])
     opts.extend(files)
 
     subprocess.check_call(opts)

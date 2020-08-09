@@ -6,10 +6,12 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'romainl/vim-cool'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'kyoz/purify', { 'rtp': 'vim' }
+Plug 'dracula/vim', {'as':'dracula'}
 call plug#end()
 
-colorscheme purify
-let g:purify_italic = 0
+" colorscheme purify
+" let g:purify_italic = 0
+colorscheme dracula
 
 set number         "Absolute line number on current line
 set relativenumber "Relative numbers elsewhere

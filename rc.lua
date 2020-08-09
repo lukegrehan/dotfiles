@@ -239,7 +239,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore,{description = "Restore client", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Shift"   }, "e", function() awful.spawn("splatmoji type") end,{description = "Type emoji", group = "Misc"}),
+    awful.key({ modkey, "Shift"   }, "e", function() awful.spawn("splatmoji copy") end,{description = "Copy emoji", group = "Misc"}),
 
    -- Prompt
     awful.key({ modkey }, "r", function () awful.spawn(browser) end, {description = "Run browser", group = "Misc"}),
@@ -347,11 +347,15 @@ awful.rules.rules = {
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
                    } },
     { rule_any = {
-        instance = {"pinentry"},
+        instance = {"pinentry", "blueberry.py"},
         name = {"Event Tester"},
         class = {"gimp", "Peek"},
         role = {"pop-up"}
-      }, properties = { floating = true }}
+      }, properties = { floating = true }},
+    { rule = { instance="umpv" },
+      properties = { tag = "1" }
+    }
+
 }
 -- }}}
 
