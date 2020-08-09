@@ -25,5 +25,3 @@ alias pacman='yay'
 alias ag='ag --pager "less -RFi"'
 alias incog=' bash --init-file <(echo ". ~/.bashrc; unset HISTFILE")'
 
-# --ytdl-format=bestvideo[height<=720]+bestaudio/best"
-MPV='mpv --pause --speed=2 --volume=60 --hwdec=auto --x11-name=umpv --force-window=immediate'
