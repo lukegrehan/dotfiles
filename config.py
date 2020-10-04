@@ -353,7 +353,7 @@ c.url.default_page = 'about:blank'
 # the search engine name to the search term, e.g. `:open google
 # qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'http://search.lukegrehan.com/?q={}', 'ddg': 'https://start.duckduckgo.com/?q={}', 'b': 'https://gen.lib.rus.ec/search.php?req={}', 'cd': 'https://cd.justinjc.com/{}', 'h': 'https://hayoo.fh-wedel.de/?query={}', 'r': 'https://reddit.com/r/{}', 'scp': 'http://scp-wiki.net/scp-{}', 't': 'https://torrentz2.eu/search?f={}'}
+c.url.searchengines = {'searx': 'http://search.lukegrehan.com/?q={}', 'DEFAULT': 'https://start.duckduckgo.com/?q={}', 'b': 'https://gen.lib.rus.ec/search.php?req={}', 'cd': 'https://cd.justinjc.com/{}', 'h': 'https://hayoo.fh-wedel.de/?query={}', 'r': 'https://reddit.com/r/{}', 'scp': 'http://scp-wiki.net/scp-{}', 't': 'https://torrentz2.eu/search?f={}'}
 
 # Page(s) to open at the start.
 # Type: List of FuzzyUrl, or FuzzyUrl

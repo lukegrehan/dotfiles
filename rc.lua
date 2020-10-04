@@ -351,7 +351,7 @@ awful.rules.rules = {
         name = {"Event Tester"},
         class = {"gimp", "Peek"},
         role = {"pop-up"}
-      }, properties = { floating = true }},
+      }, properties = { floating = true, placement=awful.placement.centered }},
     { rule = { instance="umpv" },
       properties = { tag = "1" }
     }

@@ -7,3 +7,6 @@ Host pi
 	HostName lukegrehan.com
 	User luke
 
+Host serv
+    HostName 45.142.176.65
+    User luke
