@@ -5,8 +5,10 @@ local awful         = require("awful")
 local wibox         = require("wibox")
 local beautiful     = require("beautiful")
 local naughty       = require("naughty")
-local trayer        = require("trayer")
-local hotkeys_popup = require("awful.hotkeys_popup").widget
+local hotkeys_popup = require("awful.hotkeys_popup")
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+require("awful.hotkeys_popup.keys")
 
 require("awful.autofocus")
 
@@ -90,6 +92,11 @@ function setStats()
     table.insert(screens, text)
   end
 
+  if #screens > 1 then
+    local focused = awful.screen.focused().index
+    screens[focused] = "'" .. screens[focused]
+  end
+
   local res = "<"..table.concat(screens, "> <").."> | "
   if #screens == 1 then
     res = res:sub(2, -5) .. " | "
@@ -124,22 +131,13 @@ end)
 statusTray = {}
 
 function showTray()
-  for s in screen do
-    local st = statusTray[s]
-      st:update()
-      st:on()
-
-    gears.timer.start_new(6, function()
-      st:off()
-      return false
-    end)
-  end
-end
-
-function updateTray()
   local st = statusTray[awful.screen.focused()]
-  st:update()
-  setStats()
+  st.visible = true
+
+  gears.timer.start_new(6, function()
+    st.visible = false
+    return false
+  end)
 end
 
 -- }}}
@@ -151,24 +149,43 @@ awful.screen.connect_for_each_screen(function(s)
   for i = 1,numTags do thisTags[i] = i end
   awful.tag(thisTags, s, layouts[1])
 
-  local st = trayer(s)
-    st:add(batterywidget)
-    st:add(tagsWidget)
-    st:add(wibox.widget.textclock("%a %b %d, %H:%M "))
-    st:add(awful.widget.layoutbox(s))
-  statusTray[s] = st
-  -- st:update()
+  statusTray[s] = awful.popup {
+    widget = {
+      {
+        batterywidget,
+        tagsWidget,
+        wibox.widget.textclock("%a %b %d, %H:%M "),
+        wibox.widget {
+          awful.widget.layoutbox(s),
+          layout = wibox.layout.fixed.horizontal,
+          forced_height = 15,
+          forced_width = 15
+        },
+        layout = wibox.layout.fixed.horizontal,
+      },
+      margins = 5,
+      widget  = wibox.container.margin
+    },
+    border_color = beautiful.border_focus,
+    border_width = beautiful.border_width,
+    placement    = awful.placement.top_right,
+    shape        = gears.shape.rounded_rect,
+    visible      = false,
+    ontop        = true,
+    hide_on_right_click = true,
+    screen = s
+  }
 
   for _, prop in ipairs({ "property::selected", "property::name",
     "property::activated", "property::screen", "property::index" }) do
-    awful.tag.attached_connect_signal(s, prop, updateTray)
+    awful.tag.attached_connect_signal(s, prop, setStats)
   end
 end)
 
-client.connect_signal("focus"   , updateTray)
-client.connect_signal("unfocus" , updateTray)
-client.connect_signal("tagged"  , updateTray)
-client.connect_signal("untagged", updateTray)
+client.connect_signal("focus"   , setStats)
+client.connect_signal("unfocus" , setStats)
+client.connect_signal("tagged"  , setStats)
+client.connect_signal("untagged", setStats)
 
 
 -- {{{ Key bindings
@@ -208,8 +225,8 @@ globalkeys = awful.util.table.join(
         end,{description = "Focus prev client in stack", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,{description = "Swap next client", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,{description = "Swap prev client", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end ,{description = "Focus next screen", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end ,{description = "Focus prev screen", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1); showTray() end ,{description = "Focus next screen", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1); showTray() end ,{description = "Focus prev screen", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,{description = "Jump to urgent", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "Tab",
         function ()
@@ -334,6 +351,12 @@ clientbuttons = awful.util.table.join(
 root.keys(globalkeys)
 -- }}}
 
+function test(c)
+  local screen = awful.screen.preferred(c)
+  naughty.notify({title=""..screen.index})
+  return screen
+end
+
 -- {{{ Rules
 awful.rules.rules = {
     -- All clients will match this rule.
@@ -341,7 +364,7 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
-                     screen = awful.screen.prefered,
+                     screen = awful.screen.preferred,
                      keys = clientkeys,
                      buttons = clientbuttons,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
@@ -349,7 +372,7 @@ awful.rules.rules = {
     { rule_any = {
         instance = {"pinentry", "blueberry.py"},
         name = {"Event Tester"},
-        class = {"gimp", "Peek"},
+        class = {"gimp", "Peek", "Blueman-manager"},
         role = {"pop-up"}
       }, properties = { floating = true, placement=awful.placement.centered }},
     { rule = { instance="umpv" },
