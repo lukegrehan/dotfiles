@@ -5,13 +5,9 @@ Plug 'tpope/vim-commentary'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'romainl/vim-cool'
 Plug 'ConradIrwin/vim-bracketed-paste'
-Plug 'kyoz/purify', { 'rtp': 'vim' }
-Plug 'dracula/vim', {'as':'dracula'}
 call plug#end()
 
-" colorscheme purify
-" let g:purify_italic = 0
-colorscheme dracula
+colorscheme slate
 
 set number         "Absolute line number on current line
 set relativenumber "Relative numbers elsewhere
@@ -32,7 +28,6 @@ set expandtab      "Tabs are spaces
 set wildmenu       "Visual autocomplete for command menu
 set gdefault       "Global replace by default
 set confirm        "Confirm save on exit
-set termguicolors  "True colour support
 set exrc           "Project specific .vimrc files
 set secure
 set hidden         "Open buffers without neccessarily saving
@@ -40,11 +35,6 @@ set splitright     "Open splits to the right and below
 set splitbelow
 
 set path+=**
-
-if &term =~# '^screen' "tmux magic
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
 
 let mapleader = " " "<Leader> = <Space>
 
@@ -96,3 +86,4 @@ function! MkScratch()
  setlocal buflisted
 endfunction
 nnoremap <leader>s :call MkScratch()<cr>
+

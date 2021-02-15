@@ -34,7 +34,8 @@ rdiff-backup -v 5 \
   --exclude-regexp '/home/luke/Workspace/.*/node_modules/.*' \
   --exclude-regexp '/home/luke/Workspace/.*/__pycache__/.*' \
   /home/luke/ \
-  luke@$backupUrl::/home/luke/Backups >> $logFile 2>&1
+  luke@$backupUrl::/home/luke/Backups \
+  >> $logFile 2>&1
 checkReturn "backup failed"
 
 log "done"

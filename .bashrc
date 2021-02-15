@@ -1,5 +1,7 @@
 [ -z "$PS1" ] && return
 
+PATH=$PATH:~/.local/bin
+
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=2000

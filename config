@@ -4,7 +4,7 @@ Host school
 	User lpg17
 
 Host pi
-	HostName lukegrehan.com
+	HostName raspberrypi.local
 	User luke
 
 Host serv
