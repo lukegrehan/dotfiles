@@ -19,7 +19,7 @@ alias v='vim'
 alias ytdl='youtube-dl -f bestaudio --extract-audio --audio-format mp3'
 alias startRemote='/opt/urserver/urserver --daemon'
 alias pandoc='pandoc --pdf-engine=xelatex'
-alias pacman='paru'
+alias pacman='paru --sudoloop'
 alias ag='ag --pager "less -RFi"'
 alias incog=' bash --init-file <(echo ". ~/.bashrc; unset HISTFILE")'
 
