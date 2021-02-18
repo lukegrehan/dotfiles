@@ -142,6 +142,49 @@ end
 
 -- }}}
 
+-- {{{ Master/slave info
+-- TODO: make dynamic?
+function showColInfo()
+  local master = tostring(awful.tag.getnmaster())
+  local col = tostring(awful.tag.getncol())
+  local mw = tostring(awful.tag.getmwfact())
+  local text = "<b>Master: </b>" .. master
+          .. "\n<b>Cols: </b>" .. col
+          .. "\n<b>Master width: </b>" .. mw
+
+  -- naughty.notify({ title = "show col!", text = text })
+
+  local p = awful.popup {
+    widget = {
+      {
+        {
+          markup = text,
+          widget = wibox.widget.textbox
+        },
+        layout = wibox.layout.fixed.horizontal,
+      },
+      margins = 10,
+      widget  = wibox.container.margin,
+      forced_width = 155,
+    },
+    border_color = beautiful.border_focus,
+    border_width = beautiful.border_width,
+    placement    = awful.placement.top_left,
+    shape        = gears.shape.rounded_rect,
+    visible      = true,
+    ontop        = true,
+    hide_on_right_click = true,
+    screen = awful.screen.focused(),
+  }
+
+  gears.timer.start_new(3, function()
+    p.visible = false
+    return false
+  end)
+
+end
+-- }}}
+
 awful.screen.connect_for_each_screen(function(s)
   set_wallpaper(s)
 
@@ -241,16 +284,12 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart,{description = "Restart awesome", group = "Misc"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,{description = "Quit awesome", group = "Misc"}),
 
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)
-                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,{description = "Increase number of master windows", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)
-                                             naughty.notify({ title = 'Master', text = tostring(awful.tag.getnmaster()), timeout = 1 }) end,{description = "Decrease number of master windows", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)
-                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Increase number of slave columns", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)
-                                             naughty.notify({ title = 'Columns', text = tostring(awful.tag.getncol()), timeout = 1 }) end,{description = "Decrease number of slave columns", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.025)    end,{description = "Increase master window size", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.025)    end,{description = "Decrease master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1); showColInfo() end,{description = "Increase number of master windows", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1); showColInfo() end,{description = "Decrease number of master windows", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1); showColInfo() end,{description = "Increase number of slave columns", group = "Layout Manipulation"}),
+    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1); showColInfo() end,{description = "Decrease number of slave columns", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.025); showColInfo() end,{description = "Increase master window size", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.025); showColInfo() end,{description = "Decrease master window size", group = "Layout Manipulation"}),
     awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end,{description = "Cycle layout forward", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,{description = "Cycle layout backward", group = "Layout Manipulation"}),
 
@@ -288,6 +327,7 @@ globalkeys = awful.util.table.join(
     awful.key({ "Control", "Mod1" }, "l", function() awful.spawn("xtrlock") end, {description = "Lock screen", group = "Misc"}),
 
     awful.key({ modkey }, "F1", hotkeys_popup.show_help, {description = "Show help (...so meta)", group = "Misc"}),
+    awful.key({ modkey }, "F2", showColInfo, {description = "Show col info", group = "Misc"}),
     awful.key({ modkey }, "s", showTray, {description = "Show status bar", group = "Misc"})
 )
 
@@ -350,12 +390,6 @@ clientbuttons = awful.util.table.join(
 -- Set keys
 root.keys(globalkeys)
 -- }}}
-
-function test(c)
-  local screen = awful.screen.preferred(c)
-  naughty.notify({title=""..screen.index})
-  return screen
-end
 
 -- {{{ Rules
 awful.rules.rules = {
