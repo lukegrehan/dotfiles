@@ -129,13 +129,22 @@ end)
 
 -- {{{ Wibox
 statusTray = {}
+statusTrayTimers = {}
 
 function showTray()
-  local st = statusTray[awful.screen.focused()]
+  local screen = awful.screen.focused()
+
+  local st = statusTray[screen]
   st.visible = true
 
-  gears.timer.start_new(6, function()
+  local timer = statusTrayTimers[screen]
+  if (timer ~= nil) then
+    timer:stop()
+  end
+
+  statusTrayTimers[screen] = gears.timer.start_new(6, function()
     st.visible = false
+    statusTrayTimers[screen] = nil
     return false
   end)
 end
@@ -151,8 +160,6 @@ function showColInfo()
   local text = "<b>Master: </b>" .. master
           .. "\n<b>Cols: </b>" .. col
           .. "\n<b>Master width: </b>" .. mw
-
-  -- naughty.notify({ title = "show col!", text = text })
 
   local p = awful.popup {
     widget = {
