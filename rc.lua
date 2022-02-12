@@ -15,7 +15,7 @@ require("awful.autofocus")
 -- {{{ Variable definitions
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
-terminal = "alacritty"
+terminal = "kitty"
 -- browser = "chromium"
 browser = "qutebrowser"
 modkey = "Mod4"

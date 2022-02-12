@@ -35,6 +35,7 @@ set splitright     "Open splits to the right and below
 set splitbelow
 
 set path+=**
+set belloff=all
 
 let mapleader = " " "<Leader> = <Space>
 

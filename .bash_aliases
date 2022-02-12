@@ -20,6 +20,6 @@ alias ytdl='youtube-dl -f bestaudio --extract-audio --audio-format mp3'
 alias startRemote='/opt/urserver/urserver --daemon'
 alias pandoc='pandoc --pdf-engine=xelatex'
 alias pacman='paru --sudoloop'
-alias ag='ag --pager "less -RFi"'
+alias ag='ag --pager "less -rFi"'
 alias incog=' bash --init-file <(echo ". ~/.bashrc; unset HISTFILE")'
 

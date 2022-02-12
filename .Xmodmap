@@ -5,4 +5,4 @@ clear Lock
 keycode 9 = Caps_Lock
 keycode 23 = Escape
 keycode 66 = Tab
-
+keycode 134 = Multi_key

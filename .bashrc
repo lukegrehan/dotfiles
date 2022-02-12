@@ -5,7 +5,7 @@ PATH=$PATH:~/.local/bin
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=2000
-HISTIGNORE="history:l:shutdown"
+HISTIGNORE="history:l:shutdown:incog"
 
 PROMPT_DIRTRIM=3
 
@@ -53,3 +53,7 @@ if [ -n "$VIRTUAL_ENV" ]; then
     . "$VIRTUAL_ENV/bin/activate"
 fi
 
+
+# BEGIN_KITTY_SHELL_INTEGRATION
+if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
+# END_KITTY_SHELL_INTEGRATION
