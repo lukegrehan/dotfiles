@@ -87,4 +87,4 @@ else:
                  "--"])
     opts.extend(files)
 
-    subprocess.check_call(opts)
+    subprocess.Popen(opts)

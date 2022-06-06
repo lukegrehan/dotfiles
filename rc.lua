@@ -301,8 +301,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end,{description = "Cycle layout backward", group = "Layout Manipulation"}),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore,{description = "Restore client", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
-    awful.key({ modkey, "Shift"   }, "e", function() awful.spawn("splatmoji copy") end,{description = "Copy emoji", group = "Misc"}),
+    awful.key({ modkey, "Shift"   }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
+    awful.key({ modkey,           }, "e", function() awful.spawn("rofimoji") end,{description = "Copy emoji", group = "Misc"}),
 
    -- Prompt
     awful.key({ modkey }, "r", function () awful.spawn(browser) end, {description = "Run browser", group = "Misc"}),
@@ -339,13 +339,14 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "q",      function (c) c:kill()                         end,{description = "Close window", group = "Client"}),
-    awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle        ,{description = "Toggle floating", group = "Client"}),
-    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,{description = "Swap client with master", group = "Client"}),
-    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,{description = "Move to screen", group = "Client"}),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,{description = "Set ontop", group = "Client"}),
-    awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen  end,{description = "Maximize client", group = "Client"}),
-    awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky          end,{description = "Set client sticky", group = "Client"})
+    awful.key({ modkey,           }, "q",      function (c) c:kill()                             end,{description = "Close window", group = "Client"}),
+    awful.key({ modkey, "Control" }, "space",               awful.client.floating.toggle            ,{description = "Toggle floating", group = "Client"}),
+    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster())     end,{description = "Swap client with master", group = "Client"}),
+    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()                   end,{description = "Move to next screen", group = "Client"}),
+    awful.key({ modkey, "Shift"   }, "o",      function (c) c:move_to_screen(c.screen.index-1)   end,{description = "Move to prev screen", group = "Client"}),
+    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop                end,{description = "Set ontop", group = "Client"}),
+    awful.key({ modkey,           }, "m",      function (c) c.fullscreen = not c.fullscreen      end,{description = "Maximize client", group = "Client"}),
+    awful.key({ modkey, "Shift"   }, "s",      function (c) c.sticky = not c.sticky              end,{description = "Set client sticky", group = "Client"})
 )
 
 -- Bind all key numbers to tags.
