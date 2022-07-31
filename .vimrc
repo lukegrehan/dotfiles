@@ -55,7 +55,7 @@ set backspace=indent,eol,start " make backspace behave in a sane manner
 set whichwrap+=<,>,h,l,[,]
 
 "Dual of J; split line at cursor
-nnoremap K i<CR><Esc>
+nnoremap K li<CR><Esc>
 
 "Next buffer
 nnoremap <leader>n :bn<cr>

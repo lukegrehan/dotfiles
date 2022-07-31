@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import shutil
+from dataclasses import dataclass
+
+@dataclass
+class Dir:
+    data: [str]
+    nxt: "Optional[Dir]"
+
+def buildDir(path):
+    with os.scandir(path) as it:
+        fs = []
+        nxt = None
+        for entry in it:
+            if entry.is_dir() and entry.name == "new":
+                nxt = buildDir(entry.path)
+            else:
+                fs.append(entry.path)
+        if fs: return Dir(fs, nxt)
+        else:  return None
+
+def reverse(ds):
+    res = None
+    while ds is not None:
+        res = Dir(ds.data, res)
+        ds = ds.nxt
+    return res
+
+def reify(ds, to=None):
+    if to is None:
+        to = "res"
+        mkdir(to)
+    if ds is None:
+        return
+
+    for f in ds.data:
+        mv(f, to)
+    if ds.nxt:
+        old = f"{to}/old"
+        mkdir(old)
+        reify(ds.nxt, old)
+
+def mkdir(path):
+    print(f"mking dir at {path}")
+    os.mkdir(path)
+
+def mv(f, to):
+    print(f"moving from {f} to {to}")
+    shutil.move(f, to)
+
+def main(dir):
+    reify(reverse(buildDir(dir)))
+
+if __name__ == '__main__':
+    main( sys.argv[1] if len(sys.argv) > 1 else 'test' )
+

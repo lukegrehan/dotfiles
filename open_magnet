@@ -1,1 +1,2 @@
 ssh pi -C transmission-remote --auth=transmission:XXX -a "$1"
+notify-send "added new magnet"

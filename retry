@@ -1,0 +1,17 @@
+#!/bin/env python
+
+import os
+import sys
+
+RETRY_LIMIT = 10
+CMD = ' '.join(sys.argv[1:])
+
+for _ in range(RETRY_LIMIT):
+    ret_code = os.system(CMD)
+    if ret_code == 0:
+        sys.exit(0)
+    print("RETRY")
+
+print("OUT OF RETRIES...")
+sys.exit(1)
+

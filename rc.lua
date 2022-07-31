@@ -302,7 +302,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore,{description = "Restore client", group = "Layout Manipulation"}),
     awful.key({ modkey, "Shift"   }, "e", function() client.focus = awful.client.getmaster(); client.focus:raise() end,{description = "Focus master", group = "Layout Manipulation"}),
-    awful.key({ modkey,           }, "e", function() awful.spawn("rofimoji") end,{description = "Copy emoji", group = "Misc"}),
+    awful.key({ modkey,           }, "e", function() awful.spawn("rofimoji -a clipboard") end,{description = "Copy emoji", group = "Misc"}),
 
    -- Prompt
     awful.key({ modkey }, "r", function () awful.spawn(browser) end, {description = "Run browser", group = "Misc"}),
