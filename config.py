@@ -16,7 +16,7 @@ config.load_autoconfig()
 # Aliases for commands. The keys of the given dictionary are the
 # aliases, while the values are the commands they map to.
 # Type: Dict
-c.aliases = {'pocket-save': 'open -t -r https://getpocket.com/edit?url={url}', 'q': 'quit', 'w': 'session-save', 'wq': 'quit --save'}
+c.aliases = {'pocket-save-XXX': 'open -t -r https://getpocket.com/edit?url={url}', 'q': 'quit', 'w': 'session-save', 'wq': 'quit --save'}
 
 # Require a confirmation before quitting the application.
 # Type: ConfirmQuit
@@ -431,3 +431,4 @@ config.bind('gp', 'open -p')
 config.bind('gw', 'open -w')
 config.bind('gl', 'tab-move -')
 config.bind('gr', 'tab-move +')
+config.bind('sp', 'spawn --userscript qutepocket')
