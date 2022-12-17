@@ -2,13 +2,32 @@
 
 import os
 import sys
+import subprocess
+import signal
 
 RETRY_LIMIT = 10
-CMD = ' '.join(sys.argv[1:])
+CMD = sys.argv[1:]
+
+proc = None
+cancelled = False
+def handler(_signum, _frame):
+    global cancelled
+    global proc
+    print("killing...")
+    if proc:
+        proc.terminate()
+        proc = None
+    if cancelled:
+        sys.exit(1)
+    cancelled = True
+signal.signal(signal.SIGINT, handler)
 
 for _ in range(RETRY_LIMIT):
-    ret_code = os.system(CMD)
-    if ret_code == 0:
+    if cancelled:
+        sys.exit(1)
+    proc = subprocess.Popen(CMD)
+    proc and proc.wait()
+    if proc and proc.returncode == 0:
         sys.exit(0)
     print("RETRY")
 
