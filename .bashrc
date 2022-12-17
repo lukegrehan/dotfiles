@@ -5,7 +5,7 @@ PATH=$PATH:~/.local/bin
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=2000
-HISTIGNORE="history:l:shutdown:incog:pass"
+HISTIGNORE="history:l:shutdown:incog:pass*"
 
 PROMPT_DIRTRIM=3
 

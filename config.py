@@ -16,7 +16,7 @@ config.load_autoconfig()
 # Aliases for commands. The keys of the given dictionary are the
 # aliases, while the values are the commands they map to.
 # Type: Dict
-c.aliases = {'pocket-save-XXX': 'open -t -r https://getpocket.com/edit?url={url}', 'q': 'quit', 'w': 'session-save', 'wq': 'quit --save'}
+c.aliases = {'pocket-save': 'message-error "use the hotkey you fuck"', 'q': 'quit', 'w': 'session-save', 'wq': 'quit --save'}
 
 # Require a confirmation before quitting the application.
 # Type: ConfirmQuit
@@ -204,7 +204,7 @@ config.set('content.notifications.enabled', False, 'https://www.reddit.com')
 # still be downloaded by clicking the download button in the pdf.js
 # viewer.
 # Type: Bool
-c.content.pdfjs = True
+c.content.pdfjs = False
 
 # Proxy to use. In addition to the listed values, you can use a
 # `socks://...` or `http://...` URL.
@@ -353,7 +353,7 @@ c.url.default_page = 'about:blank'
 # the search engine name to the search term, e.g. `:open google
 # qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'http://search.lukegrehan.com/search?q={}', 'ddg': 'https://start.duckduckgo.com/?q={}', 'b': 'https://gen.lib.rus.ec/search.php?req={}', 'cd': 'https://cd.justinjc.com/{}', 'h': 'https://hayoo.fh-wedel.de/?query={}', 'r': 'https://reddit.com/r/{}', 'scp': 'http://scp-wiki.net/scp-{}', 't': 'https://torrentz2.eu/search?f={}'}
+c.url.searchengines = {'who': 'http://search.lukegrehan.com/search?q={}', 'DEFAULT': 'https://start.duckduckgo.com/?q={}', 'b': 'https://gen.lib.rus.ec/search.php?req={}', 'cd': 'https://cd.justinjc.com/{}', 'h': 'https://hayoo.fh-wedel.de/?query={}', 'r': 'https://reddit.com/r/{}', 'scp': 'http://scp-wiki.net/scp-{}', 't': 'https://torrentz2.eu/search?f={}'}
 
 # Page(s) to open at the start.
 # Type: List of FuzzyUrl, or FuzzyUrl

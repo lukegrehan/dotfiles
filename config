@@ -1,10 +1,10 @@
 ServerAliveInterval 5
-Host school
-    HostName shell1.doc.ic.ac.uk
-	User lpg17
+Host home
+    HostName 176.61.37.16
+    User luke
 
 Host pi
-	HostName raspberrypi.local
+	HostName raspberrypi.localdomain
 	User luke
 
 Host serv
