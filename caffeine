@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sleeptime=${1:-"2h"}
+
+function onExit() {
+  echo ""
+  echo "time up - sleeping"
+  xset s on +dpms
+}
+trap onExit EXIT
+
+echo "staying awake for ${sleeptime}"
+xset s off -dpms
+sleep ${sleeptime}
