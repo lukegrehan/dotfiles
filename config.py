@@ -254,7 +254,7 @@ c.downloads.location.prompt = False
 # `{line0}`: Same as `{line}`, but starting from index 0. * `{column0}`:
 # Same as `{column}`, but starting from index 0.
 # Type: ShellCommand
-c.editor.command = ['kitty', '-e', 'vim', '+{line}', '{file}']
+c.editor.command = ['vimt', '+{line}', '{file}']
 
 # Characters used for hint strings.
 # Type: UniqueCharString
