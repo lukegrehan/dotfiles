@@ -82,7 +82,6 @@ else:
 
     opts = (os.getenv("MPV") or "mpv").split()
     opts.extend(["--pause", "--speed=2", "--volume=60", "--x11-name=umpv"])
-    opts.extend(["--ytdl-format=bestvideo[height<=720]+bestaudio/best"])
     opts.extend(["--no-terminal", "--force-window=immediate", "--input-ipc-server=" + SOCK,
                  "--"])
     opts.extend(files)

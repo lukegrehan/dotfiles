@@ -21,7 +21,9 @@ date > /home/luke/.backuplog
 ping -qc 1 $backupUrl >/dev/null 2>&1
 checkReturn "cannot access backup loc"
 
-rdiff-backup -v 5 \
+rdiff-backup \
+  -v 5 \
+  --new backup \
   --include '/home/luke/.gnupg/' \
   --include '/home/luke/.password-store/' \
   --include '/home/luke/.minecraft/' \
