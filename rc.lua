@@ -17,7 +17,7 @@ beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
 terminal = "kitty"
 -- browser = "chromium"
-browser = "qutebrowser"
+browser = "firefox"
 modkey = "Mod4"
 numTags = 10
 
