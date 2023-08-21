@@ -2,12 +2,17 @@
 	l = log --graph --pretty=oneline --abbrev-commit
 	st = status -sb
     unstage = reset HEAD --
-    squash = "!git reset --soft $(git merge-base ${1:-master} $(git rev-parse --abbrev-ref HEAD)) && git commit && git rebase ${1:-master} && :"
+    squash = "!git reset --soft $(git merge-base ${1:-main} $(git rev-parse --abbrev-ref HEAD)) && git commit && git rebase ${1:-main} && :"
+    diff-words = diff --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+    hide = update-index --assume-unchanged
+    unhide = update-index --no-assume-unchanged
+    hidden = ! git ls-files -v | grep '^h' | cut -c3-
 [user]
 	email = luketenant@gmail.com
 	name = Luke Grehan
 [push]
 	default = simple
+    autoSetupRemote = true
 [core]
 	editor = vim
 [diff]
@@ -20,3 +25,5 @@
 	prompt = false
 [init]
 	defaultBranch = main
+[pull]
+    ff = only
