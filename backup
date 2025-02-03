@@ -1,6 +1,6 @@
 #!/bin/bash
 
-backupUrl=raspberrypi.localdomain
+backupUrl=raspberrypi.local
 logFile=/home/luke/.backuplog
 
 function log {

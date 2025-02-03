@@ -87,9 +87,6 @@ xnoremap > >gv
 "Line operator
 onoremap <silent> ; :<C-U>normal! 0v$<CR>
 
-"Exit insert mode
-inoremap jk <esc>
-
 function! MkScratch()
  setlocal buftype=nofile
  setlocal bufhidden=hide

@@ -52,6 +52,9 @@ if [ -n "$VIRTUAL_ENV" ]; then
     . "$VIRTUAL_ENV/bin/activate"
 fi
 
+# https://junegunn.github.io/fzf/shell-integration
+command -v fzf > /dev/null && eval "$(fzf --bash)"
+
 
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi

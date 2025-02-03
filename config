@@ -1,11 +1,7 @@
 ServerAliveInterval 5
-Host home
-    HostName 176.61.37.16
-    User luke
-
 Host pi
-	HostName raspberrypi.localdomain
-	User luke
+    HostName 192.168.0.107
+    User luke
 
 Host serv
     HostName 45.142.176.65

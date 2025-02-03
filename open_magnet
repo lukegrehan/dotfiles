@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ssh pi -C "qbittorrent-nox '$1'" && notify-send "added new magnet" || notify-send --urgency=critical "couldn't add magnet"
+ssh pi "qbittorrent-nox '$1'" && notify-send "added new magnet" || notify-send --urgency=critical "couldn't add magnet"
