@@ -5,6 +5,7 @@ Plug 'tpope/vim-commentary'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'romainl/vim-cool'
 Plug 'ConradIrwin/vim-bracketed-paste'
+Plug 'luizribeiro/vim-cooklang', { 'for': 'cook' }
 call plug#end()
 
 colorscheme slate

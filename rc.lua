@@ -16,6 +16,7 @@ require("awful.autofocus")
 beautiful.init(".config/awesome/themes/myTheme/theme.lua")
 
 terminal = "kitty"
+-- terminal = "xterm"
 -- browser = "chromium"
 browser = "firefox"
 modkey = "Mod4"
@@ -315,10 +316,14 @@ globalkeys = awful.util.table.join(
       awful.spawn("amixer set Master 5%-",false) end,{description = "lower volume", group = "Sound"}),
     awful.key({ }, "XF86AudioMute", function ()
       awful.spawn("amixer sset Master toggle",false) end,{description = "mute", group = "Sound"}),
+    -- awful.key({ modkey }, "z", function()
+    --   awful.spawn("mocp --toggle-pause",false) end,{description = "pause music", group = "Sound"}),
+    -- awful.key({ modkey }, "x", function()
+    --   awful.spawn("mocp --next",false) end,{description = "next song", group = "Sound"}),
     awful.key({ modkey }, "z", function()
-      awful.spawn("mocp --toggle-pause",false) end,{description = "pause music", group = "Sound"}),
+      awful.spawn("playerctl play-pause",false) end,{description = "pause music", group = "Sound"}),
     awful.key({ modkey }, "x", function()
-      awful.spawn("mocp --next",false) end,{description = "next song", group = "Sound"}),
+      awful.spawn("playerctl next",false) end,{description = "next song", group = "Sound"}),
 
     awful.key({ }, "XF86Display", function ()
       awful.spawn("arandr") end,{description = "Screen setup", group = "Screens"}),

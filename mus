@@ -1,0 +1,8 @@
+tmux_conf="
+bind -n q detach
+bind -n Q send-keys q \; kill-session
+set -g mouse on
+set -g status off
+"
+
+tmux -f <(echo "$tmux_conf") new-session -A -D -s mus jellyfin-tui

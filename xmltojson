@@ -2,18 +2,73 @@
 
 import xmltodict
 import json
+from bs4 import BeautifulSoup, element
 
-def xmltojson(xml):
-    return json.dumps(xmltodict.parse(xml))
+from typing import Any, Dict, Optional, Union
+
+def _get_key_name(instance):
+    instance_type = type(instance)
+
+    if instance_type == element.Tag:
+        return instance.name
+
+    return str(instance_type.__name__).lower()
+
+
+def _attribute_at_prepender(instance):
+    prefixed = {}
+    for key, attribute_value in instance.items():
+        prefixed['@{key}'.format(key=key)] = attribute_value
+    return prefixed
+
+
+def transform(instance) -> dict:
+    def isAnyOf(*tys):
+        return any(isinstance(instance, ty) for ty in tys)
+
+    if (isAnyOf(element.NavigableString, element.Comment, element.CData, element.ProcessingInstruction, element.XMLProcessingInstruction, element.Declaration, element.Doctype, element.Stylesheet, element.Script, element.TemplateString)):
+        return str(instance).strip().strip('\n') or None
+    if (isAnyOf(element.ResultSet, list)):
+        return _transform_rs(instance)
+    if (isAnyOf(element.Tag)):
+        return _transform_tag(instance)
+    raise "fuck"
+
+
+def _transform_rs(instance):
+    transformed = {}
+
+    for soup_element in instance:
+        parsed = transform(soup_element)
+        if not parsed:
+            continue
+
+        key_name = _get_key_name(soup_element)
+
+        dict_value = transformed.get(key_name, [])
+        dict_value.append(parsed)
+        transformed[key_name] = dict_value
+
+    return transformed
+
+
+def _transform_tag(instance):
+    tag_result = _attribute_at_prepender(instance.attrs)
+    tag_result['#text'] = ' '.join(
+        [text.replace('\n    ', ' ') for text in instance.stripped_strings],
+    )
+    tag_result.update(transform(instance.contents))
+
+    return tag_result
+
 
 if __name__ == '__main__':
     import fileinput
     try:
         with fileinput.input() as f:
-            xml = "\n".join(line for line in f)
-        dict = xmltodict.parse(xml)
-        json = json.dumps(dict)
-        print(json)
+            raw = "\n".join(line for line in f)
+        soup = BeautifulSoup(raw, features="html.parser")
+        print(json.dumps(transform(soup.contents)))
     except Exception as e:
         import sys
         print(e)

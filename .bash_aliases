@@ -22,7 +22,7 @@ alias pacman='paru --sudoloop'
 alias ag='ag --pager="less -rFi"'
 alias incog=' exec bash --init-file <(echo ". ~/.bashrc; unset HISTFILE")'
 alias pyhton='python'
-alias mupdf='gobble mupdf'
 alias youtube-dl='yt-dlp'
 alias neofetch='fastfetch'
+alias mocp='cowsay "use mus"'
 

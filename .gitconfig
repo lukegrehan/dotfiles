@@ -17,9 +17,12 @@
 	editor = vim
 [diff]
 	tool = vimdiff
+    algorithm = histogram
+    colorMoved = plain
+    mnemonicPrefix = true
 [merge]
 	tool = vimdiff
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [mergetool]
 	keepBackup = false
 	prompt = false
@@ -27,3 +30,16 @@
 	defaultBranch = main
 [pull]
     ff = only
+    rebase = true
+[column]
+    ui = auto
+[branch]
+    sort = -committerdate
+[tag]
+    sort = version:refname
+[fetch]
+    prune = true
+[rebase]
+    autoSquash = true
+    autoStash = true
+    updateRefs = true
